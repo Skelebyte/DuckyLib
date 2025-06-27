@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "khrplatform.h": "c",
+        "sdl.h": "c",
+        "stdio.h": "c",
+        "glad.h": "c",
+        "window.h": "c",
+        "renderer.h": "c",
+        "cstdlib": "c"
+    }
+}
