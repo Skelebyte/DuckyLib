@@ -6,6 +6,8 @@
         "glad.h": "c",
         "window.h": "c",
         "renderer.h": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "file.h": "c",
+        "math.h": "c"
     }
 }

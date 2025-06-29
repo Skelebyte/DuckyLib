@@ -2,14 +2,14 @@
 #define FILE_H
 
 #include <stdio.h>
-
-#define FILE_LINE_BUFFER_MAX 256
+#include <stdlib.h>
 
 const char *read_file(const char *dir)
 {
     FILE *file;
-    char buffer[FILE_LINE_BUFFER_MAX];
-    const char *content;
+    char *buffer;
+    long file_size;
+    size_t bytes_read;
 
     file = fopen(dir, "r");
 
@@ -19,15 +19,32 @@ const char *read_file(const char *dir)
         return NULL;
     }
 
-    while (fgets(buffer, sizeof(buffer), file) != NULL)
+    fseek(file, 0, SEEK_END);
+    file_size = ftell(file);
+    rewind(file);
+
+    buffer = (char *)malloc(file_size + 1);
+    if (buffer == NULL)
     {
+        perror("Failed to allocate memory to buffer!\n");
+        fclose(file);
+        return NULL;
     }
 
-    content = buffer;
+    bytes_read = fread(buffer, 1, file_size, file);
+    if (bytes_read != file_size)
+    {
+        fprintf(stderr, "Failed to read.\n");
+        free(buffer);
+        fclose(file);
+        return NULL;
+    }
+
+    buffer[file_size] = '\0';
 
     fclose(file);
 
-    return content;
+    return buffer;
 }
 
 #endif
