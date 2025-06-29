@@ -28,6 +28,15 @@ int glr_enable_depth_test()
     return 0;
 }
 
+int glr_enable_culling() {
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    glFrontFace(GL_CCW);
+
+    return 0;
+}
+
 int glr_compile_shaders(GLR_Renderer *renderer, const char *v_shader_src, const char *f_shader_src)
 {
     unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -70,14 +79,63 @@ int glr_gen_vert_objs(GLR_Renderer *renderer, float *data, size_t size)
     return 0;
 }
 
-int glr_use_program(GLR_Renderer *renderer)
+int glr_unbind_vao(GLR_Renderer *renderer)
+{
+    glBindVertexArray(0);
+
+    return 0;
+}
+
+int glr_unbind_vbo(GLR_Renderer *renderer)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    return 0;
+}
+
+int glr_unbind_all(GLR_Renderer *renderer)
+{
+    glr_unbind_vao(renderer);
+    glr_unbind_vbo(renderer);
+
+    return 0;
+}
+
+int glr_gen_vao(GLR_Renderer *renderer) 
+{
+    glGenVertexArrays(1, &renderer->vao);
+
+    return 0;
+}
+
+int glr_gen_vbo(GLR_Renderer *renderer, float *data, size_t size) 
+{
+    glBindVertexArray(renderer->vao);
+    glGenBuffers(1, &renderer->vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
+    glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), data, GL_STATIC_DRAW);
+    glBindVertexArray(0);
+}
+
+int glr_vao_link_attrib(GLR_Renderer *renderer, unsigned int layout, unsigned int amount, GLenum type, GLsizeiptr stride, void* offset) 
+{
+    glBindVertexArray(renderer->vao);
+    glVertexAttribPointer(layout, amount, type, GL_FALSE, stride, offset);
+    glEnableVertexAttribArray(layout);
+
+    return 0;
+}
+
+
+
+int glw_use_program(GLR_Renderer *renderer)
 {
     glUseProgram(renderer->shader_program);
 
     return 0;
 }
 
-int glr_bind_vert_arr(GLR_Renderer *renderer)
+int glr_bind_vao(GLR_Renderer *renderer)
 {
     glBindVertexArray(renderer->vao);
 

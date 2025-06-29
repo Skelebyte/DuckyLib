@@ -52,7 +52,7 @@ int glr_window_create(GLR_Window *window, const char *title, int w, int h)
     return 0;
 }
 
-int glr_window_should_close(GLR_Window *window)
+int glw_window_should_close(GLR_Window *window)
 {
     while (SDL_PollEvent(&window->sdl_event))
     {
@@ -90,7 +90,7 @@ float glr_get_virtual_aspect(GLR_AspectRatios virtual_aspect)
     }
 }
 
-    int glr_window_viewport(GLR_Window *window, GLR_AspectRatios virtual_aspect)
+    int glw_window_viewport(GLR_Window *window, GLR_AspectRatios virtual_aspect)
 {
     int width, height;
     SDL_GetWindowSize(window->sdl_window, &width, &height);
@@ -120,7 +120,7 @@ float glr_get_virtual_aspect(GLR_AspectRatios virtual_aspect)
     return 0;
 }
 
-int glr_window_swap_buffer(GLR_Window *window)
+int glw_window_swap_buffer(GLR_Window *window)
 {
     SDL_GL_SwapWindow(window->sdl_window);
 
@@ -129,7 +129,7 @@ int glr_window_swap_buffer(GLR_Window *window)
     return 0;
 }
 
-int glr_window_destroy(GLR_Window *window)
+int glw_window_destroy(GLR_Window *window)
 {
     SDL_GL_DestroyContext(window->sdl_glcontext);
     SDL_DestroyWindow(window->sdl_window);

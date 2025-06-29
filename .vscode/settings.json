@@ -8,6 +8,7 @@
         "renderer.h": "c",
         "cstdlib": "c",
         "file.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "functional": "c"
     }
 }
