@@ -180,7 +180,6 @@ int glr_bind_vao(GLR_Renderer *renderer)
 int glr_draw(GLR_Renderer *renderer)
 {
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    glr_get_opengl_error(__FILE__, __LINE__);
 
     return 0;
 }

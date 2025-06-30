@@ -6,14 +6,13 @@
 
 #define M_PI 3.14159265358979323846
 
-/**
- * Matrix 4x4
- */
-typedef struct Mat4
-{
-    float matrix[4][4];
+#define Mat4 float*
 
-} Mat4, Matrix4x4;
+int mat4_free(Mat4 mat4) 
+{
+    free(mat4);
+    return 0;
+}
 
 /**
  * @brief Default value for a 4x4 matrix.
@@ -28,10 +27,15 @@ Mat4 mat4_identity()
 {
     Mat4 mat4;
 
-    mat4.matrix[0][0] = 1.0f;
-    mat4.matrix[1][1] = 1.0f;
-    mat4.matrix[2][2] = 1.0f;
-    mat4.matrix[3][3] = 1.0f;
+    mat4 = malloc(sizeof(float) * 16);
+
+    for (int i = 0; i < 16; i++)
+        mat4[i] = 0;
+
+    mat4[0] = 1;
+    mat4[5] = 1;
+    mat4[10] = 1;
+    mat4[15] = 1;
 
     return mat4;
 }
@@ -39,111 +43,139 @@ Mat4 mat4_identity()
 Mat4 mat4_multiply(Mat4 a, Mat4 b)
 {
     Mat4 temp = mat4_identity();
-    for (int r = 0; r < 4; r++)
-    {
-        for (int c = 0; c < 4; c++)
-        {
-            temp.matrix[r][c] = 0;
 
-            for (int i = 0; i < 4; i++)
+    for (int row = 0; row < 4; row++) 
+    {
+        for (int col = 0; col < 4; col++) 
+        {
+            float sum = 0;
+            for (int i = 0; i < 4; i++) 
             {
-                temp.matrix[r][c] += a.matrix[r][i] * b.matrix[i][c];
+                sum += a[i * 4 + row] * b[col * 4 + i];
             }
+            temp[col * 4 + row] = sum;
         }
     }
-
-    temp.matrix[3][3] = 1.0f;
 
     return temp;
 }
 
-int mat4_translate(Mat4 *mat4, Vec3 point)
+int mat4_translate(Mat4 mat4, Vec3 point)
 {
-    mat4->matrix[0][3] = point.x;
-    mat4->matrix[1][3] = point.y;
-    mat4->matrix[2][3] = point.z;
-}
+    mat4[12] = point.x;
+    mat4[13] = point.y;
+    mat4[14] = point.z;
 
-int mat4_rotate(Mat4 *mat4, Vec3 angles)
-{
-    Mat4 x_rot;
-    Mat4 y_rot;
-    Mat4 z_rot;
-    Mat4 temp;
-    Vec3 angles_in_rad = vec3(angles.x * M_PI / 180, angles.y * M_PI / 180, angles.z * M_PI / 180);
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            x_rot.matrix[i][j] = mat4->matrix[i][j];
-            y_rot.matrix[i][j] = mat4->matrix[i][j];
-            z_rot.matrix[i][j] = mat4->matrix[i][j];
-        }
-    }
-
-    x_rot.matrix[1][1] = cos(angles_in_rad.x);
-    x_rot.matrix[2][1] = sin(angles_in_rad.x);
-    x_rot.matrix[1][2] = -sin(angles_in_rad.x);
-    x_rot.matrix[2][2] = cos(angles_in_rad.x);
-
-    y_rot.matrix[0][0] = cos(angles_in_rad.y);
-    y_rot.matrix[2][0] = -sin(angles_in_rad.y);
-    y_rot.matrix[0][2] = sin(angles_in_rad.y);
-    y_rot.matrix[2][2] = cos(angles_in_rad.y);
-
-    z_rot.matrix[0][0] = cos(angles_in_rad.z);
-    z_rot.matrix[1][0] = -sin(angles_in_rad.z);
-    z_rot.matrix[0][1] = sin(angles_in_rad.z);
-    z_rot.matrix[1][1] = cos(angles_in_rad.z);
-
-    temp = (mat4_multiply(mat4_multiply(x_rot, y_rot), z_rot));
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            mat4->matrix[i][j] = temp.matrix[i][j];
-        }
-    }
     return 0;
 }
 
-int mat4_scale(Mat4 *mat4, Vec3 scale)
+int mat4_rotate(Mat4 mat4, Vec3 angles)
 {
-    mat4->matrix[0][0] = scale.x;
-    mat4->matrix[1][1] = scale.y;
-    mat4->matrix[2][2] = scale.z;
+    Mat4 x_rot = mat4_identity();
+    Mat4 y_rot = mat4_identity();
+    Mat4 z_rot = mat4_identity();
+    Vec3 angles_in_rad = vec3(angles.x * M_PI / 180, angles.y * M_PI / 180, angles.z * M_PI / 180);
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     x_rot[i] = mat4[i];
+    //     y_rot[i] = mat4[i];
+    //     z_rot[i] = mat4[i];
+    // }
+
+    x_rot[5] = cos(angles_in_rad.x);
+    x_rot[6] = -sin(angles_in_rad.x);
+    x_rot[9] = sin(angles_in_rad.x);
+    x_rot[10] = cos(angles_in_rad.x);
+
+    y_rot[0] = cos(angles_in_rad.y);
+    y_rot[2] = sin(angles_in_rad.y);
+    y_rot[8] = -sin(angles_in_rad.y);
+    y_rot[10] = cos(angles_in_rad.y);
+
+    z_rot[0] = cos(angles_in_rad.z);
+    z_rot[1] = sin(angles_in_rad.z);
+    z_rot[4] = -sin(angles_in_rad.z);
+    z_rot[5] = cos(angles_in_rad.z);
+
+    Mat4 xy_rot = mat4_multiply(x_rot, y_rot);
+    Mat4 xyz_rot = mat4_multiply(xy_rot, z_rot);
+    Mat4 rot = mat4_multiply(mat4, xyz_rot);
+    for (int i = 0; i < 16; i++)
+    {
+        mat4[i] = rot[i];
+    }
+    mat4_free(rot);
+    mat4_free(xy_rot);
+    mat4_free(xyz_rot);
+    return 0;
+}
+
+int mat4_scale(Mat4 mat4, Vec3 scale)
+{
+    mat4[0] = scale.x;
+    mat4[5] = scale.y;
+    mat4[10] = scale.z;
 
     return 0;
 }
 
 Mat4 mat4_custom(Vec3 pos, Vec3 rot, Vec3 sca)
 {
-    Mat4 temp;
-
     Mat4 position = mat4_identity();
     Mat4 rotation = mat4_identity();
     Mat4 scale = mat4_identity();
 
-    mat4_translate(&position, pos);
-    mat4_rotate(&rotation, rot);
-    mat4_scale(&scale, sca);
+    mat4_translate(position, pos);
+    mat4_rotate(rotation, rot);
+    mat4_scale(scale, sca);
 
-    //Mat4 new_matrix = mat4_multiply(mat4_multiply(scale, rotation), position);
-    Mat4 new_matrix = mat4_multiply(position, mat4_multiply(scale, rotation));
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            temp.matrix[i][j] = new_matrix.matrix[i][j];
-        }
-    }
+    Mat4 new_matrix = mat4_multiply(position, mat4_multiply(rotation, scale));
+
+    mat4_free(position);
+    mat4_free(rotation);
+    mat4_free(scale);
+
+    return new_matrix;
+}
+
+Mat4 mat4_perspective(float fov_in_rads, float aspect, float near_plane, float far_plane) 
+{
+    Mat4 temp = mat4_identity();
+
+    temp[0] = 1 / (aspect * tan(fov_in_rads / 2));
+    temp[5] = 1 / tan(fov_in_rads / 2);
+    temp[10] = -(far_plane + near_plane) / (far_plane - near_plane);
+    temp[11] = -1;
+    temp[14] = (2 * far_plane * near_plane / far_plane - near_plane);
+    temp[15] = 0;
 
     return temp;
 }
 
-Mat4 mat4()
+Mat4 mat4_look_at(Vec3 position, Vec3 targetPosition) 
 {
-    return mat4_identity();
+    Vec3 forward = vec3_normalize(vec3_sub(position, targetPosition));
+    Vec3 right = vec3_normalize(vec3_cross(vec3(0.0f, 1.0f, 0.0f), forward));
+    Vec3 up = vec3_cross(forward, right);
+
+    Mat4 temp = mat4_identity();
+
+    temp[0] = right.x;
+    temp[4] = right.y;
+    temp[8] = right.z;
+    temp[12] = -vec3_dot(right, position);
+
+    temp[1] = up.x;
+    temp[5] = up.y;
+    temp[9] = up.z;
+    temp[13] = -vec3_dot(up, position);
+
+    temp[2] = forward.x;
+    temp[6] = forward.y;
+    temp[10] = forward.z;
+    temp[14] = -vec3_dot(forward, position);
+
+    return temp;
 }
 
 #endif
