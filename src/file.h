@@ -9,9 +9,9 @@ const char *read_file(const char *dir)
     FILE *file;
     char *buffer;
     long file_size;
-    size_t bytes_read;
+    long bytes_read;
 
-    file = fopen(dir, "r");
+    file = fopen(dir, "rb");
 
     if (file == NULL)
     {
@@ -21,6 +21,7 @@ const char *read_file(const char *dir)
 
     fseek(file, 0, SEEK_END);
     file_size = ftell(file);
+    printf("%d\n", file_size);
     rewind(file);
 
     buffer = (char *)malloc(file_size + 1);
@@ -32,17 +33,20 @@ const char *read_file(const char *dir)
     }
 
     bytes_read = fread(buffer, 1, file_size, file);
-    if (bytes_read != file_size)
+    if(bytes_read != file_size) 
     {
-        fprintf(stderr, "Failed to read.\n");
+        printf("failed to read :(\n");
         free(buffer);
         fclose(file);
         return NULL;
+    } else {
+        buffer[file_size] = 0;
+        //printf("%s\n", buffer);
     }
 
-    buffer[file_size] = '\0';
-
     fclose(file);
+
+    
 
     return buffer;
 }

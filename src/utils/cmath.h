@@ -40,11 +40,11 @@ Vec3 cmath_cross(Vec3 a, Vec3 b)
 Mat4 mat4_look_at(Vec3 position, Vec3 target)
 {
     // Vec3 forward = (position - target).Normalize();
-    Vec3 forward = vec3_normalize(vec3_sub(target, position));
+    Vec3 forward = vec3_normalize(vec3_sub(position, target));
     Vec3 right = vec3_normalize(cmath_cross(vec3(0, 1, 0), forward));
 
     Vec3 corrected_up = cmath_cross(forward, right);
-    printf("%f, %f, %f\n", corrected_up.x, corrected_up.y, corrected_up.z);
+    //printf("%f, %f, %f\n", forward.x, forward.y, forward.z);
 
     Mat4 matrix = mat4();
     // Row 0

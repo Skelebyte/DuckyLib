@@ -13,6 +13,41 @@ typedef struct GLR_Renderer
     unsigned int vbo;
 } GLR_Renderer, Renderer;
 
+int glr_get_opengl_error(const char *file, int line)
+{
+    GLenum errorCode;
+    while ((errorCode = glGetError()) != GL_NO_ERROR)
+    {
+        const char *error;
+        switch (errorCode)
+        {
+            case GL_INVALID_ENUM: 
+                error = "INVALID_ENUM"; 
+                break;
+            case GL_INVALID_VALUE:                 
+                error = "INVALID_VALUE"; 
+                break;
+            case GL_INVALID_OPERATION:             
+                error = "INVALID_OPERATION"; 
+                break;
+            case GL_STACK_OVERFLOW:                
+                error = "STACK_OVERFLOW"; 
+                break;
+            case GL_STACK_UNDERFLOW:               
+                error = "STACK_UNDERFLOW"; 
+                break;
+            case GL_OUT_OF_MEMORY:                 
+                error = "OUT_OF_MEMORY"; 
+                    break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION: 
+                error = "INVALID_FRAMEBUFFER_OPERATION"; 
+                break;
+        }
+        printf("%s | %s (%d)\n", error);
+    }
+    return errorCode;
+}
+
 int glr_enable_transparency() 
 {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -145,6 +180,7 @@ int glr_bind_vao(GLR_Renderer *renderer)
 int glr_draw(GLR_Renderer *renderer)
 {
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    glr_get_opengl_error(__FILE__, __LINE__);
 
     return 0;
 }
