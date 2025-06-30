@@ -42,8 +42,8 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
     else
     {
         // proc gen missing texture
-        width = 8;
-        height = 8;
+        width = 4;
+        height = 4;
         unsigned char *data = (unsigned char *)malloc(width * height * 3);
         for (int y = 0; y < height; y++)
         {

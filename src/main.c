@@ -6,6 +6,7 @@
 #include "file.h"
 #include "utils/cmath.h"
 #include "texture.h"
+#include "input.h"
 
 int main(int argc, char *argv[])
 {
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
 
     glr_enable_transparency();
     glr_enable_depth_test();
-    //glr_enable_culling();
+    glr_enable_culling();
 
     glr_compile_shaders(&renderer, read_file("data/shaders/vertex.glsl"), read_file("data/shaders/fragment.glsl"));
     
@@ -60,15 +61,37 @@ int main(int argc, char *argv[])
     Mat4 projection = mat4_perspective(cmath_to_radians(60), glr_get_virtual_aspect(GLR_1280x720), 0.1f, 100.0f);
 
     Vec3 camera_pos = vec3(0.0f, 0.0f, 0.0f);
-    Mat4 view = mat4_look_at(camera_pos, vec3_add(camera_pos, vec3(0.0f, 0.0f, -1.0f)));
+    Mat4 view = mat4_look_at(camera_pos, vec3_add(camera_pos, vec3(0.0f, 0.0f, 1.0f)));
 
     Mat4 camera_matrix = mat4_multiply(projection, view);
     int z = 0;
-    Mat4 model = mat4_custom(vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f));
-    while (!glw_window_should_close(&window))
-    {
+    Mat4 model = mat4_custom(vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f));
 
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    GLR_InputAxis vertical = {
+        GLR_W,
+        GLR_S
+    };
+    GLR_InputAxis horizontal = {
+        GLR_A,
+        GLR_D
+    };
+
+    GLR_InputAxis up_down = {
+        GLR_Q,
+        GLR_E
+    };
+
+    while (window.running)
+    {
+        while (SDL_PollEvent(&window.sdl_event))
+        {
+            glw_poll_events(&window);
+            camera_pos.z += gli_get_axis(&window, vertical) / 10.0f;
+            camera_pos.x += gli_get_axis(&window, horizontal) / 10.0f;
+            camera_pos.y += gli_get_axis(&window, up_down) / 10.0f;
+        }
+
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glw_window_viewport(&window, GLR_1280x720);
@@ -91,10 +114,11 @@ int main(int argc, char *argv[])
         {
             z = 0;
         }
-        view = mat4_look_at(camera_pos, vec3_add(camera_pos, vec3(0.0f, 0.0f, -1.0f)));
+        view = mat4_look_at(camera_pos, vec3_add(camera_pos, vec3(0.0f, 0.0f, 1.0f)));
 
         camera_matrix = mat4_multiply(projection, view);
-        model = mat4_custom(vec3(0, 0, -1.0f), vec3(z, z, z), vec3(1.0f, 1.0f, 1.0f));
+        model = mat4_custom(vec3(0, 0, 1.0f), vec3(z, z, z), vec3(1.0f, 1.0f, 1.0f));
+
     }
     
     glr_delete_renderer(&renderer);

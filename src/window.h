@@ -21,6 +21,8 @@ typedef struct GLR_Window
     SDL_Window *sdl_window;
     SDL_GLContext sdl_glcontext;
     SDL_Event sdl_event;
+
+    bool running;
 } GLR_Window, Window;
 
 int glr_window_create(GLR_Window *window, const char *title, int w, int h)
@@ -49,16 +51,16 @@ int glr_window_create(GLR_Window *window, const char *title, int w, int h)
         return 2;
     }
 
+    window->running = true;
+
     return 0;
 }
 
-int glw_window_should_close(GLR_Window *window)
+int glw_poll_events(GLR_Window *window)
 {
-    while (SDL_PollEvent(&window->sdl_event))
-    {
-        if (window->sdl_event.type == SDL_EVENT_QUIT)
-            return 1;
-    }
+    if (window->sdl_event.type == SDL_EVENT_QUIT)
+        window->running = false;
+
     return 0;
 }
 
