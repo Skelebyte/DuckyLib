@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
     Renderer renderer = {0};
 
-    glr_enable_transparency(false);
+    glr_enable_transparency(true);
     glr_enable_depth_test(true);
     glr_enable_culling(true);
 
