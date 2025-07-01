@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
 #include "glad/glad.h"
+#include "camera.h"
+
+#define GLR_FRAG_SHADER_DEFAULT "data/shaders/fragment.glsl"
+#define GLR_VERT_SHADER_DEFAULT "data/shaders/vertex.glsl"
 
 typedef struct GLR_Renderer
 {
@@ -11,7 +15,14 @@ typedef struct GLR_Renderer
 
     unsigned int vao;
     unsigned int vbo;
+
+    size_t data_size;
 } GLR_Renderer, Renderer;
+
+int glr_number_of_verts = 0;
+int glr_vert_offset = 0;
+
+
 
 int glr_get_opengl_error(const char *file, int line)
 {
@@ -81,6 +92,16 @@ int glr_enable_culling(bool toggle)
     return 0;
 }
 
+int glr_enable_multisample(bool toggle)
+{
+    if(toggle)
+    {
+        glEnable(GL_MULTISAMPLE);
+    }
+
+    return 0;
+}
+
 int glr_compile_shaders(GLR_Renderer *renderer, const char *v_shader_src, const char *f_shader_src)
 {
     unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -100,25 +121,6 @@ int glr_compile_shaders(GLR_Renderer *renderer, const char *v_shader_src, const 
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
-
-    return 0;
-}
-
-int glr_gen_vert_objs(GLR_Renderer *renderer, float *data, size_t size)
-{
-    glGenVertexArrays(1, &renderer->vao);
-    glGenBuffers(1, &renderer->vbo);
-
-    glBindVertexArray(renderer->vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
-    glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), data, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
 
     return 0;
 }
@@ -157,7 +159,7 @@ int glr_gen_vbo(GLR_Renderer *renderer, float *data, size_t size)
     glBindVertexArray(renderer->vao);
     glGenBuffers(1, &renderer->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
-    glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
     glBindVertexArray(0);
 }
 
@@ -176,6 +178,8 @@ int glw_use_program(GLR_Renderer *renderer)
 {
     glUseProgram(renderer->shader_program);
 
+    glUniformMatrix4fv(glGetUniformLocation(renderer->shader_program, "camera_matrix"), 1, GL_FALSE, camera.camera_matrix);
+
     return 0;
 }
 
@@ -186,11 +190,18 @@ int glr_bind_vao(GLR_Renderer *renderer)
     return 0;
 }
 
-int glr_draw(GLR_Renderer *renderer)
+int glr_draw(GLR_Renderer *renderer) // think i need to update the first arg which is 0 down there, to the size of the vertices (count)
 {
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, glr_vert_offset, glr_number_of_verts);
+
+    glr_vert_offset += renderer->data_size - 1;
 
     return 0;
+}
+
+int glr_end_draw()
+{
+    glr_vert_offset = 0;
 }
 
 int glr_delete_renderer(GLR_Renderer *renderer)

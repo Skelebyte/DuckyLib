@@ -4,11 +4,15 @@
 #include <math.h>
 #include <stdbool.h>
 
-typedef struct Vec3
+typedef union Vec3
 {
-    float x;
-    float y;
-    float z;
+    struct 
+    {
+        float x;
+        float y;
+        float z;
+    };
+    float data[3];
 
 } Vec3, Vector3;
 
@@ -17,7 +21,8 @@ Vec3 vec3(float x, float y, float z)
     Vec3 vec = {
         x,
         y,
-        z};
+        z
+    };
 
     return vec;
 }

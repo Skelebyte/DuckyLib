@@ -10,6 +10,12 @@
         "file.h": "c",
         "math.h": "c",
         "functional": "c",
-        "format": "c"
+        "format": "c",
+        "cmath": "cpp",
+        "vec3.h": "c",
+        "input.h": "c",
+        "sstream": "c",
+        "camera.h": "c",
+        "string.h": "c"
     }
 }
