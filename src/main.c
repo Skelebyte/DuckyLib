@@ -40,9 +40,9 @@ int main(int argc, char *argv[])
 
     Renderer renderer = {0};
 
-    glr_enable_transparency();
-    glr_enable_depth_test();
-    glr_enable_culling();
+    glr_enable_transparency(false);
+    glr_enable_depth_test(true);
+    glr_enable_culling(true);
 
     glr_compile_shaders(&renderer, read_file("data/shaders/vertex.glsl"), read_file("data/shaders/fragment.glsl"));
     
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     glr_vao_link_attrib(&renderer, 1, 2, GL_FLOAT, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 
     GLR_Texture texture;
-    glt_texture_load(&texture, "data/textures/.png", GLR_NEAREST);
+    glt_texture_load(&texture, "data/textures/Circle.png", GLR_LINEAR);
 
     glr_unbind_all(&renderer);
 
@@ -91,11 +91,11 @@ int main(int argc, char *argv[])
             camera_pos.y += gli_get_axis(&window, up_down) / 10.0f;
         }
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
         glw_window_viewport(&window, GLR_1280x720);
-
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glw_use_program(&renderer);
         glUniformMatrix4fv(glGetUniformLocation(renderer.shader_program, "camera_matrix"), 1, GL_FALSE, camera_matrix);
         glUniformMatrix4fv(glGetUniformLocation(renderer.shader_program, "model"), 1, GL_FALSE, model);

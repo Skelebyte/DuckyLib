@@ -48,26 +48,35 @@ int glr_get_opengl_error(const char *file, int line)
     return errorCode;
 }
 
-int glr_enable_transparency() 
+int glr_enable_transparency(bool toggle) 
 {
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
+    if(toggle) 
+    {
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
 
     return 0;
 }
 
-int glr_enable_depth_test()
+int glr_enable_depth_test(bool toggle)
 {
-    glEnable(GL_DEPTH_CLAMP);
+    if(toggle) 
+    {
+        glEnable(GL_DEPTH_CLAMP);
+    }
 
     return 0;
 }
 
-int glr_enable_culling() {
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glFrontFace(GL_CCW);
+int glr_enable_culling(bool toggle) 
+{
+    if(toggle) 
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CCW);
+    }
 
     return 0;
 }
