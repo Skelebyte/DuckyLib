@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     glr_enable_multisample(true);
 
     Entity entity = gle_new_entity(vertices, sizeof(vertices), GLR_VERT_SHADER_DEFAULT, GLR_FRAG_SHADER_DEFAULT);
-    entity.position = vec3(0.0f, 0.0f, -1.0f);
+    entity.position = vec3(0.0f, 0.0f, -1.5f);
 
     GLR_Texture texture;
     glt_texture_load(&texture, "data/textures/frank.png", GLR_LINEAR);
@@ -45,10 +45,10 @@ int main(int argc, char *argv[])
     glr_unbind_all(&entity.renderer);
 
     Entity entity2 = gle_new_entity(vertices, sizeof(vertices), GLR_VERT_SHADER_DEFAULT, GLR_FRAG_SHADER_DEFAULT);
-    entity2.position = vec3(1.0f, 1.0f, -1.0f);
+    entity2.position = vec3(0.5f, 0.5f, -1.0f);
 
     GLR_Texture texture2;
-    glt_texture_load(&texture2, "data/textures/Circle.png", GLR_LINEAR);
+    glt_texture_load(&texture2, GLR_DEFAULT_TEXTURE, GLR_LINEAR);
 
     glr_unbind_all(&entity2.renderer);
 
@@ -73,8 +73,6 @@ int main(int argc, char *argv[])
 
     bool printed = false;
 
-    printf("verts %d\n", glr_number_of_verts);
-
     while (window.running)
     {
         while (SDL_PollEvent(&window.sdl_event))
@@ -90,23 +88,26 @@ int main(int argc, char *argv[])
         glw_window_viewport(&window, GLR_1920x1080);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+
+
+
         glw_use_program(&entity.renderer);
-        glUniform4fv(glGetUniformLocation(entity.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
-        glw_use_program(&entity2.renderer);
-        glUniform4fv(glGetUniformLocation(entity2.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
-
         gle_update(&entity);
-        gle_update(&entity2);
-
+        glUniform4fv(glGetUniformLocation(entity.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
         glr_bind_vao(&entity.renderer);
         glt_bind_texture(&texture);
         glr_draw(&entity.renderer);
 
+        glw_use_program(&entity2.renderer);
+        gle_update(&entity2);
+        glUniform4fv(glGetUniformLocation(entity2.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
         glr_bind_vao(&entity2.renderer);
         glt_bind_texture(&texture2);
         glr_draw(&entity2.renderer);
 
-        glr_end_draw();
         glw_window_swap_buffer(&window);
 
         if(z < 360) {

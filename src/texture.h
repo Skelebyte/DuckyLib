@@ -5,6 +5,8 @@
 #include "stb/stb_image.h"
 #include "glad/glad.h"
 
+#define GLR_DEFAULT_TEXTURE "GLR_DEFAULT_TEXTURE"
+
 typedef enum GLR_Blendmode
 {
     GLR_NEAREST,
@@ -30,8 +32,48 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == GLR_LINEAR ? GL_LINEAR : GL_NEAREST);
 
     int width, height, channel_count;
+    unsigned char *data;
+   
+    if (path != GLR_DEFAULT_TEXTURE)
+    {
+        data = stbi_load(path, &width, &height, &channel_count, 0);
+    }
+    else
+    {
+        // proc gen missing texture
+        width = 4;
+        height = 4;
+        data = (unsigned char *)malloc(width * height * 3);
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float t = (float)x / width;
+                float s = (float)y / height;
 
-    unsigned char *data = stbi_load(path, &width, &height, &channel_count, 0);
+                int index = (y * width + x) * 3;
+                if (((int)(s * height) + (int)(t * width)) % 2 == 0)
+                {
+                    data[index] = 240;
+                    data[index + 1] = 240;
+                    data[index + 2] = 240;
+                }
+                else
+                {
+                    data[index] = 255;
+                    data[index + 1] = 255;
+                    data[index + 2] = 255;
+                }
+            }
+        }
+        if (!data)
+            printf("failed to generate missing texture!\n");
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        free(data);
+        return 0;
+    }
+
     printf("channels: %d\n", channel_count);
     if (data)
     {
@@ -44,7 +86,7 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
         // proc gen missing texture
         width = 4;
         height = 4;
-        unsigned char *data = (unsigned char *)malloc(width * height * 3);
+        data = (unsigned char *)malloc(width * height * 3);
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -70,6 +112,9 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
             printf("failed to generate missing texture!\n");
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
+
+        free(data);
+        return 0;
     }
 
     stbi_image_free(data);

@@ -38,10 +38,6 @@ GLR_Entity gle_new_entity(float *data, size_t size, const char *vert_src_dir, co
     glr_vao_link_attrib(&entity.renderer, 0, 3, GL_FLOAT, 5 * sizeof(float), (void *)0);                   // vertex position
     glr_vao_link_attrib(&entity.renderer, 1, 2, GL_FLOAT, 5 * sizeof(float), (void *)(3 * sizeof(float))); // texture coordinate
 
-    glr_number_of_verts += (size / sizeof(float)) / 5;
-
-    entity.renderer.data_size = size;
-
     return entity;
 }
 
@@ -80,6 +76,11 @@ int gle_update(GLR_Entity *entity)
     glUniformMatrix4fv(glGetUniformLocation(entity->renderer.shader_program, "model"), 1, GL_FALSE, entity->model);
 
     return 0;
+}
+
+int gle_render(GLR_Entity *entity)
+{
+    
 }
 
 

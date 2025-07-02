@@ -1,3 +1,7 @@
+### 2/2/25
+- added a default texture to GLT
+- fixed renderer to support more than 1 entity at a time
+
 ### 1/2/25
 - created `Vec4` (`utils/vec4.h`)
 - switched `Vec3` to a `union`

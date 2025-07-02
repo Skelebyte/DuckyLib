@@ -16,12 +16,8 @@ typedef struct GLR_Renderer
     unsigned int vao;
     unsigned int vbo;
 
-    size_t data_size;
+    unsigned int vertex_count;
 } GLR_Renderer, Renderer;
-
-int glr_number_of_verts = 0;
-int glr_vert_offset = 0;
-
 
 
 int glr_get_opengl_error(const char *file, int line)
@@ -161,6 +157,8 @@ int glr_gen_vbo(GLR_Renderer *renderer, float *data, size_t size)
     glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
     glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
     glBindVertexArray(0);
+
+    renderer->vertex_count = size / sizeof(float) * 5;
 }
 
 int glr_vao_link_attrib(GLR_Renderer *renderer, unsigned int layout, unsigned int amount, GLenum type, GLsizeiptr stride, void* offset) 
@@ -192,16 +190,9 @@ int glr_bind_vao(GLR_Renderer *renderer)
 
 int glr_draw(GLR_Renderer *renderer) // think i need to update the first arg which is 0 down there, to the size of the vertices (count)
 {
-    glDrawArrays(GL_TRIANGLES, glr_vert_offset, glr_number_of_verts);
-
-    glr_vert_offset += renderer->data_size - 1;
+    glDrawArrays(GL_TRIANGLES, 0, renderer->vertex_count);
 
     return 0;
-}
-
-int glr_end_draw()
-{
-    glr_vert_offset = 0;
 }
 
 int glr_delete_renderer(GLR_Renderer *renderer)
