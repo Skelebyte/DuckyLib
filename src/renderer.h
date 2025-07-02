@@ -70,7 +70,7 @@ int glr_enable_depth_test(bool toggle)
 {
     if(toggle) 
     {
-        glEnable(GL_DEPTH_CLAMP);
+        glEnable(GL_DEPTH_TEST);
     }
 
     return 0;

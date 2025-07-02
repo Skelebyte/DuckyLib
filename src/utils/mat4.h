@@ -147,7 +147,7 @@ Mat4 mat4_perspective(float fov_in_rads, float aspect, float near_plane, float f
     temp[5] = 1 / tan(fov_in_rads / 2);
     temp[10] = -(far_plane + near_plane) / (far_plane - near_plane);
     temp[11] = -1;
-    temp[14] = (2 * far_plane * near_plane) / (far_plane - near_plane);
+    temp[14] = -(2 * far_plane * near_plane) / (far_plane - near_plane);
     temp[15] = 0;
 
     return temp;

@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     glr_enable_multisample(true);
 
     Entity entity = gle_new_entity(vertices, sizeof(vertices), GLR_VERT_SHADER_DEFAULT, GLR_FRAG_SHADER_DEFAULT);
-    entity.position = vec3(0.0f, 0.0f, -1.5f);
+    entity.position = vec3(0.0f, 0.0f, -3.5f);
 
     GLR_Texture texture;
     glt_texture_load(&texture, "data/textures/frank.png", GLR_LINEAR);
@@ -45,14 +45,14 @@ int main(int argc, char *argv[])
     glr_unbind_all(&entity.renderer);
 
     Entity entity2 = gle_new_entity(vertices, sizeof(vertices), GLR_VERT_SHADER_DEFAULT, GLR_FRAG_SHADER_DEFAULT);
-    entity2.position = vec3(0.5f, 0.5f, -1.0f);
+    entity2.position = vec3(0.5f, 0.5f, -2.0f);
 
     GLR_Texture texture2;
     glt_texture_load(&texture2, GLR_DEFAULT_TEXTURE, GLR_LINEAR);
 
     glr_unbind_all(&entity2.renderer);
 
-    glc_camera(75.0f, GLR_1920x1080, 0.01f, 100.0f);
+    glc_camera(75.0f, GLR_1920x1080, 0.1f, 100.0f);
     int z = 0;
 
 
@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
         {
             glw_poll_events(&window);
             camera.position.z += gli_get_axis(&window, vertical) / 10.0f;
-            camera.position.x += gli_get_axis(&window, horizontal) / 10.0f;
-            camera.position.y += gli_get_axis(&window, up_down) / 10.0f;
+            camera.position.x += gli_get_axis(&window, horizontal) / 2.0f;
+            camera.position.y += gli_get_axis(&window, up_down) / 2.0f;
         }
 
         entity2.rotation.y = z;
@@ -88,11 +88,6 @@ int main(int argc, char *argv[])
         glw_window_viewport(&window, GLR_1920x1080);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
-
-
 
         glw_use_program(&entity.renderer);
         gle_update(&entity);
@@ -117,7 +112,7 @@ int main(int argc, char *argv[])
         {
             z = 0;
         }
-        glc_camera(75.0f, GLR_1920x1080, 0.01f, 100.0f);
+        glc_camera(75.0f, GLR_1920x1080, 0.1f, 100.0f);
 
         if(!printed) 
         {

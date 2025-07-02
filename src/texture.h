@@ -28,8 +28,16 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, blendmode == GLR_LINEAR ? GL_LINEAR : GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == GLR_LINEAR ? GL_LINEAR : GL_NEAREST);
+    if(path != GLR_DEFAULT_TEXTURE)
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, blendmode == GLR_LINEAR ? GL_LINEAR : GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == GLR_LINEAR ? GL_LINEAR : GL_NEAREST);
+    }
+    else 
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
 
     int width, height, channel_count;
     unsigned char *data;
@@ -40,7 +48,7 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
     }
     else
     {
-        // proc gen missing texture
+        // proc gen default texture
         width = 4;
         height = 4;
         data = (unsigned char *)malloc(width * height * 3);
@@ -54,9 +62,9 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
                 int index = (y * width + x) * 3;
                 if (((int)(s * height) + (int)(t * width)) % 2 == 0)
                 {
-                    data[index] = 240;
-                    data[index + 1] = 240;
-                    data[index + 2] = 240;
+                    data[index] = 220;
+                    data[index + 1] = 220;
+                    data[index + 2] = 220;
                 }
                 else
                 {
