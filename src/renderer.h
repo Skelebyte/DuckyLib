@@ -71,6 +71,8 @@ int glr_enable_depth_test(bool toggle)
     if(toggle) 
     {
         glEnable(GL_DEPTH_TEST);
+
+        glDepthFunc(GL_LESS);
     }
 
     return 0;

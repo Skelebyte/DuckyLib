@@ -2,6 +2,8 @@
 - added a default texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE` instead of a proper path)
 - fixed renderer to support more than 1 entity at a time
 - fixed depth test
+- fixed camera bug (appeared to turn off at z -0.3)
+- fixed `vec3_normalize` (related to above)
 
 ### 1/2/25
 - created `Vec4` (`utils/vec4.h`)

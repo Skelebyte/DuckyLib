@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     glr_unbind_all(&entity2.renderer);
 
-    glc_camera(75.0f, GLR_1920x1080, 0.1f, 100.0f);
+    glc_new_camera(75.0f, GLR_1920x1080, 0.001f, 100.0f);
     int z = 0;
 
 
@@ -79,6 +79,10 @@ int main(int argc, char *argv[])
         {
             glw_poll_events(&window);
             camera.position.z += gli_get_axis(&window, vertical) / 10.0f;
+            if(gli_get_axis(&window, vertical) != 0)
+            {
+
+            }
             camera.position.x += gli_get_axis(&window, horizontal) / 2.0f;
             camera.position.y += gli_get_axis(&window, up_down) / 2.0f;
         }
@@ -89,6 +93,11 @@ int main(int argc, char *argv[])
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        printf("frame start\n");
+        printf("camerapos %f\n", camera.position.z);
+        printf("target %f\n", vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)).z);
+        printf(" \n");
+
         glw_use_program(&entity.renderer);
         gle_update(&entity);
         glUniform4fv(glGetUniformLocation(entity.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
@@ -96,12 +105,12 @@ int main(int argc, char *argv[])
         glt_bind_texture(&texture);
         glr_draw(&entity.renderer);
 
-        glw_use_program(&entity2.renderer);
-        gle_update(&entity2);
-        glUniform4fv(glGetUniformLocation(entity2.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
-        glr_bind_vao(&entity2.renderer);
-        glt_bind_texture(&texture2);
-        glr_draw(&entity2.renderer);
+        // glw_use_program(&entity2.renderer);
+        // gle_update(&entity2);
+        // glUniform4fv(glGetUniformLocation(entity2.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
+        // glr_bind_vao(&entity2.renderer);
+        // glt_bind_texture(&texture2);
+        // glr_draw(&entity2.renderer);
 
         glw_window_swap_buffer(&window);
 
@@ -112,7 +121,7 @@ int main(int argc, char *argv[])
         {
             z = 0;
         }
-        glc_camera(75.0f, GLR_1920x1080, 0.1f, 100.0f);
+        glc_camera_update();
 
         if(!printed) 
         {
