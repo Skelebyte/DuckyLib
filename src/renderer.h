@@ -50,7 +50,7 @@ int glr_get_opengl_error(const char *file, int line)
                 error = "INVALID_FRAMEBUFFER_OPERATION"; 
                 break;
         }
-        printf("%s | %s (%d)\n", error);
+        printf("%s | %s (%d)\n", error, file, line);
     }
     return errorCode;
 }
@@ -71,7 +71,6 @@ int glr_enable_depth_test(bool toggle)
     if(toggle) 
     {
         glEnable(GL_DEPTH_TEST);
-
         glDepthFunc(GL_LESS);
     }
 
@@ -97,6 +96,18 @@ int glr_enable_multisample(bool toggle)
         glEnable(GL_MULTISAMPLE);
     }
 
+    return 0;
+}
+
+int glr_background_color(Vec4 color)
+{
+    glClearColor(color.x, color.y, color.z, color.w);
+    return 0;
+}
+
+int glr_clear()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     return 0;
 }
 

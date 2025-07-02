@@ -6,6 +6,7 @@
 #include "glad/glad.h"
 
 #define GLR_DEFAULT_TEXTURE "GLR_DEFAULT_TEXTURE"
+#define GLR_DEFAULT_TEXTURE_SOLID "GLR_DEFAULT_TEXTURE_SOLID"
 
 typedef enum GLR_Blendmode
 {
@@ -18,6 +19,35 @@ typedef struct GLR_Texture
     unsigned int id;
     const char *path;
 } GLR_Texture, Texture;
+
+unsigned char *glt_gen_texture(int width, int height, int r1, int g1, int b1, int r2, int g2, int b2)
+{
+    unsigned char *data = (unsigned char *)malloc(width * height * 3);
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            float t = (float)x / width;
+            float s = (float)y / height;
+
+            int index = (y * width + x) * 3;
+            if (((int)(s * height) + (int)(t * width)) % 2 == 0)
+            {
+                data[index] = r1;
+                data[index + 1] = g1;
+                data[index + 2] = b1;
+            }
+            else
+            {
+                data[index] = r2;
+                data[index + 1] = g2;
+                data[index + 2] = b2;
+            }
+        }
+    }
+
+    return data;
+}
 
 int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blendmode) 
 {
@@ -33,7 +63,7 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, blendmode == GLR_LINEAR ? GL_LINEAR : GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == GLR_LINEAR ? GL_LINEAR : GL_NEAREST);
     }
-    else 
+    else
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -42,47 +72,39 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
     int width, height, channel_count;
     unsigned char *data;
    
-    if (path != GLR_DEFAULT_TEXTURE)
+    if (path != GLR_DEFAULT_TEXTURE && path != GLR_DEFAULT_TEXTURE_SOLID)
     {
         data = stbi_load(path, &width, &height, &channel_count, 0);
     }
     else
     {
-        // proc gen default texture
         width = 4;
         height = 4;
-        data = (unsigned char *)malloc(width * height * 3);
-        for (int y = 0; y < height; y++)
+        if (path == GLR_DEFAULT_TEXTURE)
         {
-            for (int x = 0; x < width; x++)
-            {
-                float t = (float)x / width;
-                float s = (float)y / height;
-
-                int index = (y * width + x) * 3;
-                if (((int)(s * height) + (int)(t * width)) % 2 == 0)
-                {
-                    data[index] = 220;
-                    data[index + 1] = 220;
-                    data[index + 2] = 220;
-                }
-                else
-                {
-                    data[index] = 255;
-                    data[index + 1] = 255;
-                    data[index + 2] = 255;
-                }
-            }
+            // proc gen default texture
+            data = glt_gen_texture(width, height, 220, 220, 220, 255, 255, 255);
+            if (!data)
+                printf("failed to generate missing texture!\n");
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            free(data);
+            return 0;
         }
-        if (!data)
-            printf("failed to generate missing texture!\n");
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        free(data);
-        return 0;
+        if(path == GLR_DEFAULT_TEXTURE_SOLID)
+        {
+            width = 1;
+            height = 1;
+            // proc gen default texture solid
+            data = glt_gen_texture(width, height, 255, 255, 255, 255, 255, 255);
+            if (!data)
+                printf("failed to generate missing texture!\n");
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            free(data);
+            return 0;
+        }
     }
-
-    printf("channels: %d\n", channel_count);
     if (data)
     {
         GLenum format = channel_count == 4 ? GL_RGBA : GL_RGB;
@@ -94,29 +116,8 @@ int glt_texture_load(GLR_Texture *texture, const char *path, GLR_Blendmode blend
         // proc gen missing texture
         width = 4;
         height = 4;
-        data = (unsigned char *)malloc(width * height * 3);
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                float t = (float)x / width;
-                float s = (float)y / height;
-
-                int index = (y * width + x) * 3;
-                if (((int)(s * height) + (int)(t * width)) % 2 == 0)
-                {
-                    data[index] = 0;
-                    data[index + 1] = 0;
-                    data[index + 2] = 0;
-                } else
-                {
-                    data[index] = 255;
-                    data[index + 1] = 0;
-                    data[index + 2] = 255;
-                }
-            }
-        }
-        if(!data)
+        data = glt_gen_texture(width, height, 255, 0, 255, 0, 0, 0);
+        if (!data)
             printf("failed to generate missing texture!\n");
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -138,5 +139,7 @@ int glt_bind_texture(GLR_Texture *texture)
 
     return 0;
 }
+
+
 
 #endif

@@ -16,6 +16,8 @@
         "input.h": "c",
         "sstream": "c",
         "camera.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "vec4.h": "c",
+        "texture.h": "c"
     }
 }

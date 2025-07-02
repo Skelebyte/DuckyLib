@@ -6,6 +6,7 @@
 #include "utils/mat4.h"
 #include "renderer.h"
 #include "file.h"
+#include "material.h"
 
 typedef struct GLR_Entity
 {
@@ -14,6 +15,7 @@ typedef struct GLR_Entity
     Vec3 scale;
 
     Mat4 model;
+    GLR_Material material;
 
     GLR_Renderer renderer;
 
@@ -30,13 +32,20 @@ GLR_Entity gle_new_entity(float *data, size_t size, const char *vert_src_dir, co
     };
     entity.model = mat4_custom(entity.position, entity.rotation, entity.scale);
     glr_compile_shaders(&entity.renderer, read_file(vert_src_dir), read_file(frag_src_dir));
-    
+    glr_get_opengl_error("shader comp", __LINE__);
 
     glr_gen_vao(&entity.renderer);
+    glr_get_opengl_error("vbo", __LINE__);
     glr_gen_vbo(&entity.renderer, data, size);
+    glr_get_opengl_error("vbo", __LINE__);
 
     glr_vao_link_attrib(&entity.renderer, 0, 3, GL_FLOAT, 5 * sizeof(float), (void *)0);                   // vertex position
+    glr_get_opengl_error("vertex position", __LINE__);
     glr_vao_link_attrib(&entity.renderer, 1, 2, GL_FLOAT, 5 * sizeof(float), (void *)(3 * sizeof(float))); // texture coordinate
+    glr_get_opengl_error("texture coords", __LINE__);
+
+    glm_new_material(&entity.material, GLR_DEFAULT_TEXTURE, GLR_NEAREST, GLR_WHITE_COLOR);
+    glr_get_opengl_error("new material", __LINE__);
 
     return entity;
 }
@@ -73,15 +82,25 @@ int gle_update(GLR_Entity *entity)
 
     entity->model = mat4_custom(entity->position, entity->rotation, entity->scale);
 
+    glw_use_program(&entity->renderer);
+
     glUniformMatrix4fv(glGetUniformLocation(entity->renderer.shader_program, "model"), 1, GL_FALSE, entity->model);
+
+    
+
+    glm_activate_material(&entity->material, &entity->renderer);
+
+    glr_bind_vao(&entity->renderer);
+    glt_bind_texture(&entity->material.texture);
+    glr_draw(&entity->renderer);
 
     return 0;
 }
 
-int gle_render(GLR_Entity *entity)
+int gle_delete_entity(GLR_Entity *entity)
 {
-    
+    mat4_free(entity->model);
+    glr_delete_renderer(&entity->renderer);
 }
-
 
 #endif

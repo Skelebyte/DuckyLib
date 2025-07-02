@@ -26,9 +26,9 @@ int main(int argc, char *argv[])
     };
 
     Window window;
-    if (glr_window_create(&window, "Under 100 lines of code!!", 800, 800))
+    if (glr_window_create(&window, "not too shabby", 800, 800))
     {
-        printf("bogus\n");
+        printf("window failed\n");
     }
 
     glr_enable_transparency(true);
@@ -39,23 +39,17 @@ int main(int argc, char *argv[])
     Entity entity = gle_new_entity(vertices, sizeof(vertices), GLR_VERT_SHADER_DEFAULT, GLR_FRAG_SHADER_DEFAULT);
     entity.position = vec3(0.0f, 0.0f, -3.5f);
 
-    GLR_Texture texture;
-    glt_texture_load(&texture, "data/textures/frank.png", GLR_LINEAR);
+    glm_new_material(&entity.material, "data/textures/frank.png", GL_LINEAR, GLR_WHITE_COLOR);
 
     glr_unbind_all(&entity.renderer);
 
     Entity entity2 = gle_new_entity(vertices, sizeof(vertices), GLR_VERT_SHADER_DEFAULT, GLR_FRAG_SHADER_DEFAULT);
     entity2.position = vec3(0.5f, 0.5f, -2.0f);
 
-    GLR_Texture texture2;
-    glt_texture_load(&texture2, GLR_DEFAULT_TEXTURE, GLR_LINEAR);
-
     glr_unbind_all(&entity2.renderer);
 
-    glc_new_camera(75.0f, GLR_1920x1080, 0.001f, 100.0f);
+    glc_new_camera(75.0f, GLR_1920x1080, 0.1f, 100.0f);    
     int z = 0;
-
-
 
     InputAxis vertical = {
         GLR_S,
@@ -71,46 +65,24 @@ int main(int argc, char *argv[])
         GLR_E
     };
 
-    bool printed = false;
-
     while (window.running)
     {
         while (SDL_PollEvent(&window.sdl_event))
         {
             glw_poll_events(&window);
             camera.position.z += gli_get_axis(&window, vertical) / 10.0f;
-            if(gli_get_axis(&window, vertical) != 0)
-            {
-
-            }
-            camera.position.x += gli_get_axis(&window, horizontal) / 2.0f;
-            camera.position.y += gli_get_axis(&window, up_down) / 2.0f;
+            camera.position.x += gli_get_axis(&window, horizontal) / 10.0f;
+            camera.position.y += gli_get_axis(&window, up_down) / 10.0f;
         }
 
         entity2.rotation.y = z;
 
         glw_window_viewport(&window, GLR_1920x1080);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glr_background_color((Vec4){0.1f, 0.1f, 0.1f, 1.0f});
+        glr_clear();
 
-        printf("frame start\n");
-        printf("camerapos %f\n", camera.position.z);
-        printf("target %f\n", vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)).z);
-        printf(" \n");
-
-        glw_use_program(&entity.renderer);
         gle_update(&entity);
-        glUniform4fv(glGetUniformLocation(entity.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
-        glr_bind_vao(&entity.renderer);
-        glt_bind_texture(&texture);
-        glr_draw(&entity.renderer);
-
-        // glw_use_program(&entity2.renderer);
-        // gle_update(&entity2);
-        // glUniform4fv(glGetUniformLocation(entity2.renderer.shader_program, "color"), 1, vec4(1.0f, 1.0f, 1.0f, 1.0f).data);
-        // glr_bind_vao(&entity2.renderer);
-        // glt_bind_texture(&texture2);
-        // glr_draw(&entity2.renderer);
+        gle_update(&entity2);
 
         glw_window_swap_buffer(&window);
 
@@ -122,15 +94,10 @@ int main(int argc, char *argv[])
             z = 0;
         }
         glc_camera_update();
-
-        if(!printed) 
-        {
-            printed = true;
-            printf("%f, %f, %f\n", entity2.position.x, entity2.position.y, entity2.position.z);
-        }
     }
 
-    glr_delete_renderer(&entity.renderer);
+    gle_delete_entity(&entity);
+    gle_delete_entity(&entity2);
     glw_window_destroy(&window);
     SDL_Quit();
     return 0;

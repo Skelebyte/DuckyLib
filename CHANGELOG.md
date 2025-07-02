@@ -1,9 +1,14 @@
 ### 2/2/25
-- added a default texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE` instead of a proper path)
-- fixed renderer to support more than 1 entity at a time
-- fixed depth test
-- fixed camera bug (appeared to turn off at z -0.3)
+- added a default texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE` instead of a proper path, generates a 4x4 white and grey checker)
+- added a default solid texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE_SOLID` instead of a proper path, generates a 1x1 white texture)
+- renderer now supports multiple entities through multiple `glDrawArrays` calls
+- fixed depth test (changed `GL_DEPTH_CLAMP` to `GL_DEPTH_TEST`)
+- fixed camera bug (appeared to turn off at z -0.3, caused by broken `vec3_normalize` function)
 - fixed `vec3_normalize` (related to above)
+- moved all entity rendering code to `gle_update`
+- created `material.h`
+- removed random `printf`s
+- created simple texture generator to `texture.h` (`glt_gen_texture`), allows checkered or solid color textures
 
 ### 1/2/25
 - created `Vec4` (`utils/vec4.h`)

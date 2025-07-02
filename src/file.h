@@ -21,7 +21,6 @@ const char *read_file(const char *dir)
 
     fseek(file, 0, SEEK_END);
     file_size = ftell(file);
-    printf("%d\n", file_size);
     rewind(file);
 
     buffer = (char *)malloc(file_size + 1);
@@ -39,9 +38,9 @@ const char *read_file(const char *dir)
         free(buffer);
         fclose(file);
         return NULL;
-    } else {
+    } else 
+    {
         buffer[file_size] = 0;
-        //printf("%s\n", buffer);
     }
 
     fclose(file);
