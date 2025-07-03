@@ -31,4 +31,15 @@ int glc_camera_update()
     camera.camera_matrix = mat4_multiply(camera.projection, camera.view);
 }
 
+int glc_destroy_camera()
+{
+    mat4_free(camera.projection);
+    mat4_free(camera.view);
+    mat4_free(camera.camera_matrix);
+
+    camera.position = vec3_zero();
+
+    return 0;
+}
+
 #endif

@@ -1,3 +1,6 @@
+### 3/2/25
+- added `glc_destroy_camera` to `camera.h`
+
 ### 2/2/25
 - added a default texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE` instead of a proper path, generates a 4x4 white and grey checker)
 - added a default solid texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE_SOLID` instead of a proper path, generates a 1x1 white texture)
