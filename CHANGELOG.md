@@ -1,7 +1,13 @@
-### 3/2/25
-- added `glc_destroy_camera` to `camera.h`
+# Changelog
 
-### 2/2/25
+## 3/2/25
+
+- added `glc_destroy_camera` to `camera.h`
+- added inline docs to `camera.h`
+- started working on frames
+
+## 2/2/25
+
 - added a default texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE` instead of a proper path, generates a 4x4 white and grey checker)
 - added a default solid texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE_SOLID` instead of a proper path, generates a 1x1 white texture)
 - renderer now supports multiple entities through multiple `glDrawArrays` calls
@@ -13,7 +19,8 @@
 - removed random `printf`s
 - created simple texture generator to `texture.h` (`glt_gen_texture`), allows checkered or solid color textures
 
-### 1/2/25
+## 1/2/25
+
 - created `Vec4` (`utils/vec4.h`)
 - switched `Vec3` to a `union`
 - added transparent texture support

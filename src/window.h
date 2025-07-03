@@ -1,3 +1,7 @@
+// CBF Cute Bird Framework
+// BDF Buff Duck Framework
+// RDF Rubber Duck Framework
+
 #ifndef WINDOW_H
 #define WINDOW_H
 
@@ -128,7 +132,7 @@ int glw_window_swap_buffer(GLR_Window *window)
 {
     SDL_GL_SwapWindow(window->sdl_window);
 
-    SDL_Delay(10);
+    //SDL_Delay(10);
 
     return 0;
 }

@@ -9,6 +9,7 @@
 #include "input.h"
 #include "entity.h"
 #include "camera.h"
+#include "time.h"
 
 int main(int argc, char *argv[])
 {
@@ -67,6 +68,7 @@ int main(int argc, char *argv[])
 
     while (window.running)
     {
+        glt_begin_frame();
         while (SDL_PollEvent(&window.sdl_event))
         {
             glw_poll_events(&window);
@@ -86,6 +88,8 @@ int main(int argc, char *argv[])
 
         glw_window_swap_buffer(&window);
 
+        printf("fps: %d\n", time.fps);
+
         if(z < 360) {
             z++;
         }
@@ -94,6 +98,8 @@ int main(int argc, char *argv[])
             z = 0;
         }
         glc_camera_update();
+
+        glt_end_frame();
     }
 
     gle_delete_entity(&entity);
