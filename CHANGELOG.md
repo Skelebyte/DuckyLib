@@ -1,5 +1,9 @@
 # Changelog
 
+## 4/2/25
+- used keyboard state for input
+- added `delta_time`
+
 ## 3/2/25
 
 - added `glc_destroy_camera` to `camera.h`

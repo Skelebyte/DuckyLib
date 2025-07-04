@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
 #include "glad/glad.h"
+#include "time.h"
 
 typedef enum GLR_AspectRatios
 {

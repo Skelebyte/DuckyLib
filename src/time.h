@@ -6,41 +6,37 @@
 
 typedef struct Time
 {
-    unsigned int fps;
-    unsigned int target_fps;
-
     float delta_time;
 
-    float _processed_delta_time;
-    double _frame_time;
-
+    double _first_frame;
     double _last_frame;
 
 } Time;
 
-Time time;
+Time time = {0};
+
+int glt_init_time()
+{
+    time._last_frame = SDL_GetTicks();
+    time._last_frame /= 1000;
+
+    return 0;
+}
 
 int glt_begin_frame()
 {
-    if(time.target_fps == 0)
-        time.target_fps = 60;
-    time._frame_time = 1000.0f / time.target_fps;
+    time._first_frame = SDL_GetTicks();
+    time._first_frame /= 1000;
 
     return 0;
 }
 
 int glt_end_frame()
 {
-    Uint32 now = SDL_GetTicks();
-    Uint32 elapsed = now - time._last_frame;
-
-    if (elapsed < time._frame_time)
-    {
-        
-        SDL_Delay(time._frame_time - elapsed);
-    }
-    time.delta_time = elapsed / 1000.0f;
     time._last_frame = SDL_GetTicks();
+    time._last_frame /= 1000;
+
+    time.delta_time = time._last_frame - time._first_frame;
 
     return 0;
 }

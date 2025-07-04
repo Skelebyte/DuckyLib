@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     glr_unbind_all(&entity2.renderer);
 
-    glc_new_camera(75.0f, GLR_1920x1080, 0.1f, 100.0f);    
+    glc_new_camera(90.0f, GLR_1920x1080, 0.1f, 100.0f);    
     int z = 0;
 
     InputAxis vertical = {
@@ -66,18 +66,26 @@ int main(int argc, char *argv[])
         GLR_E
     };
 
+    
+
     while (window.running)
     {
         glt_begin_frame();
         while (SDL_PollEvent(&window.sdl_event))
         {
             glw_poll_events(&window);
-            camera.position.z += gli_get_axis(&window, vertical) / 10.0f;
-            camera.position.x += gli_get_axis(&window, horizontal) / 10.0f;
-            camera.position.y += gli_get_axis(&window, up_down) / 10.0f;
-        }
+            
+            
 
-        entity2.rotation.y = z;
+        }
+        camera.position.z += gli_get_axis(&window, vertical) * time.delta_time;
+        camera.position.x += gli_get_axis(&window, horizontal) * time.delta_time;
+        camera.position.y += gli_get_axis(&window, up_down) * time.delta_time;
+
+        
+        entity2.rotation.x += 100 * time.delta_time;
+        entity2.rotation.y += 100 * time.delta_time;
+        entity2.rotation.z += 100 * time.delta_time;
 
         glw_window_viewport(&window, GLR_1920x1080);
         glr_background_color((Vec4){0.1f, 0.1f, 0.1f, 1.0f});
@@ -88,17 +96,17 @@ int main(int argc, char *argv[])
 
         glw_window_swap_buffer(&window);
 
-        printf("fps: %d\n", time.fps);
+        
 
-        if(z < 360) {
-            z++;
-        }
-        else
-        {
-            z = 0;
-        }
+        // if(z < 360) {
+        //     z++;
+        // }
+        // else
+        // {
+        //     z = 0;
+        // }
         glc_camera_update();
-
+        SDL_Delay(10);
         glt_end_frame();
     }
 

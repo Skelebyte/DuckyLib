@@ -155,10 +155,7 @@ Mat4 mat4_perspective(float fov_in_rads, float aspect, float near_plane, float f
 
 Mat4 mat4_look_at(Vec3 position, Vec3 targetPosition) 
 {
-    if (vec3_is_equal(vec3_sub(position, targetPosition), vec3_zero()))
-    {
-        printf("SCREAM\n");
-    }
+
     Vec3 forward = vec3_normalize(vec3_sub(position, targetPosition));
     Vec3 right = vec3_normalize(vec3_cross(vec3(0.0f, 1.0f, 0.0f), forward));
     Vec3 up = vec3_cross(forward, right);

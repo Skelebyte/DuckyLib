@@ -92,17 +92,18 @@ typedef struct GLR_InputAxis
 int gli_get_axis(GLR_Window *window, GLR_InputAxis axis) 
 {
 
-    if(window->sdl_event.type != SDL_EVENT_KEY_DOWN)
-        return 0;
+    const bool *input = SDL_GetKeyboardState(NULL);
 
-    if (window->sdl_event.key.scancode == axis.positive)
+    if(input[axis.positive] == true)
     {
         return 1;
     }
-    else if (window->sdl_event.key.scancode == axis.negative)
+
+    if(input[axis.negative] == true)
     {
         return -1;
     }
+
 
     return 0;
 }

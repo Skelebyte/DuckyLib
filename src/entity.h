@@ -55,29 +55,29 @@ int gle_update(GLR_Entity *entity)
 
     if(entity->rotation.x > 360) 
     {
-        entity->rotation.x -= entity->rotation.x - 360;
+        entity->rotation.x = entity->rotation.x - 360;
     }
     else if (entity->rotation.x < 0) 
     {
-        entity->rotation.x -= entity->rotation.x + 360;
+        entity->rotation.x = entity->rotation.x + 360;
     }
 
     if (entity->rotation.y > 360)
     {
-        entity->rotation.y -= entity->rotation.y - 360;
+        entity->rotation.y = entity->rotation.y - 360;
     }
     else if (entity->rotation.y < 0)
     {
-        entity->rotation.y -= entity->rotation.y + 360;
+        entity->rotation.y = entity->rotation.y + 360;
     }
 
     if (entity->rotation.z > 360)
     {
-        entity->rotation.z -= entity->rotation.z - 360;
+        entity->rotation.z = entity->rotation.z - 360;
     }
     else if (entity->rotation.z < 0)
     {
-        entity->rotation.z -= entity->rotation.z + 360;
+        entity->rotation.z = entity->rotation.z + 360;
     }
 
     entity->model = mat4_custom(entity->position, entity->rotation, entity->scale);
