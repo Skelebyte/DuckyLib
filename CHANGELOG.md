@@ -1,6 +1,11 @@
 # Changelog
 
+## 5/7/25
+
+- added frame counting and FPS
+
 ## 4/2/25
+
 - used keyboard state for input
 - added `delta_time`
 
