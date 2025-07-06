@@ -18,6 +18,7 @@
         "camera.h": "c",
         "string.h": "c",
         "vec4.h": "c",
-        "texture.h": "c"
+        "texture.h": "c",
+        "cmath.h": "c"
     }
 }

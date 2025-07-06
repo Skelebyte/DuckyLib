@@ -1,21 +1,35 @@
-# Changelog
+# DuckyLib Changelog
+
+## 6/7/25
+
+- fixed the dates in `CHANGELOG.md`
+- renamed all structs, enums, macros, and functions to begin with `dl_` or `DL_`
+- created `constants.h`
+- moved the vertices for the square shape to `constants.h` (`dl_square_2d`)
+- name for this project: `DuckyLib`
+- created `ducky.h`
+- moved all source files to into new folder `duckylib`
+- moved `file.h` to `duckylib/utils`
+- added a default start-up function do `ducky.h` (`dl_startup`) that optionall y creates the window, camera, and default OpenGL settings
+- updated `Makefile` to correctly point to `glad.c`
+- `dl_entity_new` now allows passing `NULL` for the shader directories, which will swap to the default directory macros (`DL_FRAG_SHADER_DEFAULT`, `DL_VERT_SHADER_DEFAULT`)
 
 ## 5/7/25
 
 - added frame counting and FPS
 
-## 4/2/25
+## 4/7/25
 
 - used keyboard state for input
 - added `delta_time`
 
-## 3/2/25
+## 3/7/25
 
 - added `glc_destroy_camera` to `camera.h`
 - added inline docs to `camera.h`
 - started working on frames
 
-## 2/2/25
+## 2/7/25
 
 - added a default texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE` instead of a proper path, generates a 4x4 white and grey checker)
 - added a default solid texture to GLT (accessible by passing `GLR_DEFAULT_TEXTURE_SOLID` instead of a proper path, generates a 1x1 white texture)
@@ -28,7 +42,7 @@
 - removed random `printf`s
 - created simple texture generator to `texture.h` (`glt_gen_texture`), allows checkered or solid color textures
 
-## 1/2/25
+## 1/7/25
 
 - created `Vec4` (`utils/vec4.h`)
 - switched `Vec3` to a `union`

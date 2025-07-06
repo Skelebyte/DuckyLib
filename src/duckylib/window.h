@@ -1,7 +1,3 @@
-// CBF Cute Bird Framework
-// BDF Buff Duck Framework
-// RDF Rubber Duck Framework
-
 #ifndef WINDOW_H
 #define WINDOW_H
 
@@ -10,27 +6,27 @@
 #include "glad/glad.h"
 #include "time.h"
 
-typedef enum GLR_AspectRatios
+typedef enum DL_AspectRatios
 {
-    GLR_1920x1080,
-    GLR_1280x720,
-    GLR_960x540,
-    GLR_640x360,
-    GLR_320x180,
-    GLR_256_240,
-    GLR_320x240
-} GLR_AspectRatios, AspectRatios;
+    DL_Aspect_1920x1080,
+    DL_Aspect_1280x720,
+    DL_Aspect_960x540,
+    DL_Aspect_640x360,
+    DL_Aspect_320x180,
+    DL_Aspect_256_240,
+    DL_Aspect_320x240
+} DL_AspectRatios, AspectRatios;
 
-typedef struct GLR_Window
+typedef struct DL_Window
 {
     SDL_Window *sdl_window;
     SDL_GLContext sdl_glcontext;
     SDL_Event sdl_event;
 
     bool running;
-} GLR_Window, Window;
+} DL_Window, Window;
 
-int glr_window_create(GLR_Window *window, const char *title, int w, int h)
+int dl_window_create(DL_Window *window, const char *title, int w, int h)
 {
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -63,7 +59,7 @@ int glr_window_create(GLR_Window *window, const char *title, int w, int h)
     return 0;
 }
 
-int glw_poll_events(GLR_Window *window)
+int dl_poll_events(DL_Window *window)
 {
     if (window->sdl_event.type == SDL_EVENT_QUIT)
         window->running = false;
@@ -71,41 +67,41 @@ int glw_poll_events(GLR_Window *window)
     return 0;
 }
 
-float glr_get_virtual_aspect(GLR_AspectRatios virtual_aspect) 
+float dl_get_virtual_aspect(DL_AspectRatios virtual_aspect) 
 {
     switch (virtual_aspect)
     {
-    case GLR_1920x1080:
+    case DL_Aspect_1920x1080:
         return (float)1920 / 1080;
         break;
-    case GLR_1280x720:
+    case DL_Aspect_1280x720:
         return (float)1280 / 720;
         break;
-    case GLR_960x540:
+    case DL_Aspect_960x540:
         return (float)960 / 540;
         break;
-    case GLR_640x360:
+    case DL_Aspect_640x360:
         return (float)640 / 360;
         break;
-    case GLR_320x180:
+    case DL_Aspect_320x180:
         return (float)320 / 180;
         break;
-    case GLR_256_240:
+    case DL_Aspect_256_240:
         return (float)256 / 240;
         break;
-    case GLR_320x240:
+    case DL_Aspect_320x240:
         return (float)320 / 240;
         break;
     }
 }
 
-    int glw_window_viewport(GLR_Window *window, GLR_AspectRatios virtual_aspect)
+int dl_window_set_viewport(DL_Window *window, DL_AspectRatios virtual_aspect)
 {
     int width, height;
     SDL_GetWindowSize(window->sdl_window, &width, &height);
 
     float window_aspect = (float)width / height;
-    float game_aspect = glr_get_virtual_aspect(virtual_aspect);
+    float game_aspect = dl_get_virtual_aspect(virtual_aspect);
 
     int viewport_w, viewport_h, viewport_x, viewport_y;
 
@@ -129,7 +125,7 @@ float glr_get_virtual_aspect(GLR_AspectRatios virtual_aspect)
     return 0;
 }
 
-int glw_window_swap_buffer(GLR_Window *window)
+int dl_window_swap_buffer(DL_Window *window)
 {
     SDL_GL_SwapWindow(window->sdl_window);
 
@@ -138,7 +134,7 @@ int glw_window_swap_buffer(GLR_Window *window)
     return 0;
 }
 
-int glw_window_destroy(GLR_Window *window)
+int dl_window_destroy(DL_Window *window)
 {
     SDL_GL_DestroyContext(window->sdl_glcontext);
     SDL_DestroyWindow(window->sdl_window);

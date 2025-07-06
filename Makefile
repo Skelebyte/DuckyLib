@@ -1,2 +1,2 @@
 default:
-	gcc src/main.c src/glad/glad.c -lSDL3 -lm
+	gcc src/main.c src/duckylib/glad/glad.c -lSDL3 -lm

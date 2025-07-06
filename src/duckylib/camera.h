@@ -9,19 +9,19 @@
  * @typedef `GLR_Camera`, `Camera`
  *
  */
-typedef struct GLR_Camera
+typedef struct DL_Camera
 {
     Mat4 projection;
     Mat4 view;
     Mat4 camera_matrix;
     Vec3 position;
-} GLR_Camera, Camera;
+} DL_Camera, Camera;
 
 /**
  * @brief Global camera
- * 
+ *
  */
-GLR_Camera camera;
+DL_Camera camera;
 
 /**
  * @brief Generates the perspective projection view matrices using the global `GLR_Camera camera`.
@@ -32,9 +32,9 @@ GLR_Camera camera;
  * @param far_plane Clipping distance far from the camera
  * @return int 
  */
-int glc_new_camera(float fov, GLR_AspectRatios aspect, float near_plane, float far_plane)
+int dl_camera_new(float fov, DL_AspectRatios aspect, float near_plane, float far_plane)
 {
-    camera.projection = mat4_perspective(cmath_to_radians(fov), glr_get_virtual_aspect(aspect), near_plane, far_plane);
+    camera.projection = mat4_perspective(cmath_to_radians(fov), dl_get_virtual_aspect(aspect), near_plane, far_plane);
     camera.view = mat4_look_at(camera.position, vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)));
     camera.camera_matrix = mat4_multiply(camera.projection, camera.view);
 
@@ -45,7 +45,7 @@ int glc_new_camera(float fov, GLR_AspectRatios aspect, float near_plane, float f
  *
  * @return int 
  */
-int glc_camera_update()
+int dl_camera_update()
 {
     mat4_free(camera.view);
     camera.view = mat4_look_at(camera.position, vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)));
@@ -60,7 +60,7 @@ int glc_camera_update()
  * 
  * @return int 
  */
-int glc_destroy_camera()
+int dl_camera_destroy()
 {
     mat4_free(camera.projection);
     mat4_free(camera.view);

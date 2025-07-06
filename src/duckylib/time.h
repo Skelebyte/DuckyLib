@@ -4,7 +4,7 @@
 #include <SDL3/SDL.h>
 #include <stdbool.h>
 
-typedef struct Time
+typedef struct DL_Time
 {
     int fps;
     float delta_time;
@@ -15,11 +15,11 @@ typedef struct Time
     float _counted_frames;
     float _frame_time;
 
-} Time;
+} DL_Time, Time;
 
-Time time = {0};
+DL_Time time = {0};
 
-int glt_init_time()
+int dl_frame_init()
 {
     time._last_frame = SDL_GetTicks();
     time._last_frame /= 1000;
@@ -27,7 +27,7 @@ int glt_init_time()
     return 0;
 }
 
-int glt_begin_frame()
+int dl_frame_begin()
 {
     time._first_frame = SDL_GetTicks();
     time._first_frame /= 1000;
@@ -35,7 +35,7 @@ int glt_begin_frame()
     return 0;
 }
 
-int glt_end_frame()
+int dl_frame_end()
 {
     time._last_frame = SDL_GetTicks();
     time._last_frame /= 1000;

@@ -6,10 +6,10 @@
 #include "glad/glad.h"
 #include "camera.h"
 
-#define GLR_FRAG_SHADER_DEFAULT "data/shaders/fragment.glsl"
-#define GLR_VERT_SHADER_DEFAULT "data/shaders/vertex.glsl"
+#define DL_FRAG_SHADER_DEFAULT "data/shaders/fragment.glsl"
+#define DL_VERT_SHADER_DEFAULT "data/shaders/vertex.glsl"
 
-typedef struct GLR_Renderer
+typedef struct DL_Renderer
 {
     unsigned int shader_program;
 
@@ -17,10 +17,10 @@ typedef struct GLR_Renderer
     unsigned int vbo;
 
     unsigned int vertex_count;
-} GLR_Renderer, Renderer;
+} DL_Renderer, Renderer;
 
 
-int glr_get_opengl_error(const char *file, int line)
+int dl_renderer_opengl_error(const char *file, int line)
 {
     GLenum errorCode;
     while ((errorCode = glGetError()) != GL_NO_ERROR)
@@ -55,7 +55,7 @@ int glr_get_opengl_error(const char *file, int line)
     return errorCode;
 }
 
-int glr_enable_transparency(bool toggle) 
+int dl_renderer_enable_transparency(bool toggle) 
 {
     if(toggle) 
     {
@@ -66,7 +66,7 @@ int glr_enable_transparency(bool toggle)
     return 0;
 }
 
-int glr_enable_depth_test(bool toggle)
+int dl_renderer_enable_depth_test(bool toggle)
 {
     if(toggle) 
     {
@@ -77,7 +77,7 @@ int glr_enable_depth_test(bool toggle)
     return 0;
 }
 
-int glr_enable_culling(bool toggle) 
+int dl_renderer_enable_culling(bool toggle) 
 {
     if(toggle) 
     {
@@ -89,7 +89,7 @@ int glr_enable_culling(bool toggle)
     return 0;
 }
 
-int glr_enable_multisample(bool toggle)
+int dl_renderer_enable_multisample(bool toggle)
 {
     if(toggle)
     {
@@ -99,19 +99,19 @@ int glr_enable_multisample(bool toggle)
     return 0;
 }
 
-int glr_background_color(Vec4 color)
+int dl_renderer_set_background(Vec4 color)
 {
     glClearColor(color.x, color.y, color.z, color.w);
     return 0;
 }
 
-int glr_clear()
+int dl_renderer_clear()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     return 0;
 }
 
-int glr_compile_shaders(GLR_Renderer *renderer, const char *v_shader_src, const char *f_shader_src)
+int dl_renderer_compile_shaders(DL_Renderer *renderer, const char *v_shader_src, const char *f_shader_src)
 {
     unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &v_shader_src, NULL);
@@ -134,36 +134,36 @@ int glr_compile_shaders(GLR_Renderer *renderer, const char *v_shader_src, const 
     return 0;
 }
 
-int glr_unbind_vao(GLR_Renderer *renderer)
+int dl_renderer_unbind_vao(DL_Renderer *renderer)
 {
     glBindVertexArray(0);
 
     return 0;
 }
 
-int glr_unbind_vbo(GLR_Renderer *renderer)
+int dl_renderer_unbind_vbo(DL_Renderer *renderer)
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     return 0;
 }
 
-int glr_unbind_all(GLR_Renderer *renderer)
+int dl_renderer_unbind_all(DL_Renderer *renderer)
 {
-    glr_unbind_vao(renderer);
-    glr_unbind_vbo(renderer);
+    dl_renderer_unbind_vao(renderer);
+    dl_renderer_unbind_vbo(renderer);
 
     return 0;
 }
 
-int glr_gen_vao(GLR_Renderer *renderer) 
+int dl_renderer_gen_vao(DL_Renderer *renderer) 
 {
     glGenVertexArrays(1, &renderer->vao);
 
     return 0;
 }
 
-int glr_gen_vbo(GLR_Renderer *renderer, float *data, size_t size) 
+int dl_renderer_gen_vbo(DL_Renderer *renderer, float *data, size_t size) 
 {
     glBindVertexArray(renderer->vao);
     glGenBuffers(1, &renderer->vbo);
@@ -174,7 +174,7 @@ int glr_gen_vbo(GLR_Renderer *renderer, float *data, size_t size)
     renderer->vertex_count = size / sizeof(float) * 5;
 }
 
-int glr_vao_link_attrib(GLR_Renderer *renderer, unsigned int layout, unsigned int amount, GLenum type, GLsizeiptr stride, void* offset) 
+int dl_renderer_link_attrib(DL_Renderer *renderer, unsigned int layout, unsigned int amount, GLenum type, GLsizeiptr stride, void* offset) 
 {
     glBindVertexArray(renderer->vao);
     glVertexAttribPointer(layout, amount, type, GL_FALSE, stride, offset);
@@ -185,7 +185,7 @@ int glr_vao_link_attrib(GLR_Renderer *renderer, unsigned int layout, unsigned in
 
 
 
-int glw_use_program(GLR_Renderer *renderer)
+int dl_renderer_use_program(DL_Renderer *renderer)
 {
     glUseProgram(renderer->shader_program);
 
@@ -194,21 +194,21 @@ int glw_use_program(GLR_Renderer *renderer)
     return 0;
 }
 
-int glr_bind_vao(GLR_Renderer *renderer)
+int dl_renderer_bind_vao(DL_Renderer *renderer)
 {
     glBindVertexArray(renderer->vao);
 
     return 0;
 }
 
-int glr_draw(GLR_Renderer *renderer) // think i need to update the first arg which is 0 down there, to the size of the vertices (count)
+int dl_renderer_draw(DL_Renderer *renderer) // think i need to update the first arg which is 0 down there, to the size of the vertices (count)
 {
     glDrawArrays(GL_TRIANGLES, 0, renderer->vertex_count);
 
     return 0;
 }
 
-int glr_delete_renderer(GLR_Renderer *renderer)
+int dl_renderer_delete(DL_Renderer *renderer)
 {
     glDeleteVertexArrays(1, &renderer->vao);
     glDeleteBuffers(1, &renderer->vbo);
