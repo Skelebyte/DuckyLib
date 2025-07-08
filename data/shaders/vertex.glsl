@@ -6,8 +6,6 @@ layout (location = 1) in vec2 a_texture_coords;
 out vec3 FragPosition;
 out vec2 texture_coords;
 
-//out vec4 color = = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-
 uniform mat4 model;
 
 uniform mat4 camera_matrix;

@@ -35,12 +35,12 @@ int dl_startup(DL_Window *window, bool init_camera, bool opengl_settings)
         dl_renderer_enable_transparency(true);
         dl_renderer_enable_depth_test(true);
         dl_renderer_enable_culling(false);
-        dl_renderer_enable_multisample(true);
+        dl_renderer_enable_antialiasing(true);
     }
 
     if(init_camera != false)
     {
-        dl_camera_new(75.0f, DL_Aspect_1920x1080, 0.1f, 100.0f);
+        dl_camera_new(75.0f, DL_Aspect_1920x1080, 0.1f, 1000.0f);
     }
 
     return 0;

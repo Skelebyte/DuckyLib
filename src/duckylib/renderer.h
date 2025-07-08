@@ -6,9 +6,6 @@
 #include "glad/glad.h"
 #include "camera.h"
 
-#define DL_FRAG_SHADER_DEFAULT "data/shaders/fragment.glsl"
-#define DL_VERT_SHADER_DEFAULT "data/shaders/vertex.glsl"
-
 typedef struct DL_Renderer
 {
     unsigned int shader_program;
@@ -89,11 +86,11 @@ int dl_renderer_enable_culling(bool toggle)
     return 0;
 }
 
-int dl_renderer_enable_multisample(bool toggle)
+int dl_renderer_enable_antialiasing(bool toggle)
 {
     if(toggle)
     {
-        glEnable(GL_MULTISAMPLE);
+        glEnable(GL_LINE_SMOOTH);
     }
 
     return 0;

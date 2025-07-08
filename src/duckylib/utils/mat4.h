@@ -9,6 +9,7 @@
 
 #define Mat4 float*
 
+
 int mat4_free(Mat4 mat4) 
 {
     free(mat4);

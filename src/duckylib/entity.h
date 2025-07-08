@@ -7,6 +7,7 @@
 #include "renderer.h"
 #include "utils/file.h"
 #include "material.h"
+#include "constants.h"
 
 typedef struct DL_Entity
 {
@@ -34,14 +35,20 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
 
     if(vert_src_dir == NULL)
     {
-        vert_src_dir = DL_VERT_SHADER_DEFAULT;   
+        vert_src_dir = dl_vert_shader;   
+    } else 
+    {
+        vert_src_dir = read_file(vert_src_dir);
     }
     if(frag_src_dir == NULL)
     {
-        frag_src_dir = DL_FRAG_SHADER_DEFAULT;
+        frag_src_dir = dl_frag_shader;
+    } else
+    {
+        frag_src_dir = read_file(frag_src_dir);
     }
 
-    dl_renderer_compile_shaders(&entity.renderer, read_file(vert_src_dir), read_file(frag_src_dir));
+    dl_renderer_compile_shaders(&entity.renderer, vert_src_dir, frag_src_dir);
 
     dl_renderer_opengl_error("shader comp", __LINE__);
 
