@@ -4,6 +4,11 @@
 
 - added default vertex and fragment shaders to `constants.h`, if `NULL` is passed in creating a new entity it swaps it for those instead
 - removed `DL_FRAG_SHADER_DEFAULT` and `DL_VERT_SHADER_DEFAULT` from `renderer.h`
+- discovered shit tonne of memory leaks in `mat4.h`
+
+## 7/7/25
+
+- external documentation work
 
 ## 6/7/25
 
