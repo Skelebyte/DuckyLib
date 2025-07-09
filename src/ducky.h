@@ -1,8 +1,10 @@
 #ifndef DUCKY_H
 #define DUCKY_H
 
+#define GLAD_GL_IMPLEMENTATION
 #include <stdio.h>
 #include <stdbool.h>
+#include <SDL3/SDL.h>
 #include "duckylib/window.h"
 #include "duckylib/renderer.h"
 #include "duckylib/texture.h"

@@ -107,7 +107,7 @@ dl_get_axis(DL_Window *window, DL_InputAxis axis)
     return 0;
 }
 
-int gl_get_key_pressed(DL_Window *window, DL_Bind *bind)
+int dl_get_key_pressed(DL_Window *window, DL_Bind *bind)
 {
     const bool *input = SDL_GetKeyboardState(NULL);
     if(input[bind->keycode] == true)
@@ -124,7 +124,7 @@ int gl_get_key_pressed(DL_Window *window, DL_Bind *bind)
     return 0;
 }
 
-int gl_get_key_just_pressed(DL_Window *window, DL_Bind *bind)
+int dl_get_key_just_pressed(DL_Window *window, DL_Bind *bind)
 {
     const bool *input = SDL_GetKeyboardState(NULL);
     if (input[bind->keycode] == true && bind->pressed == false)

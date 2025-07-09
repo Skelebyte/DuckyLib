@@ -30,13 +30,11 @@ int main(int argc, char *argv[])
     dl_renderer_unbind_all(&moon.renderer);
 
     Entity black_hole = dl_entity_new(dl_square_2d, sizeof(dl_square_2d), NULL, NULL);
-    black_hole.scale = vec3(15.0f, 15.0f, 15.0f);
+    black_hole.scale = vec3(10.0f, 10.0f, 10.0f);
     dl_material_new(&black_hole.material, "data/textures/Circle.png", GL_LINEAR, vec4(0.0f, 0.0f, 0.0f, 1.0f));
     dl_renderer_unbind_all(&black_hole.renderer);
 
     float move_speed = 100.0f;
-
-    
 
     InputAxis vertical = {
         DL_W,
@@ -66,7 +64,7 @@ int main(int argc, char *argv[])
     planet.position.y = orbital_radius2 * cos(current_angle2);
 
     float current_angle3 = init_angle;
-    float orbital_radius3 = 100.0f;
+    float orbital_radius3 = 50.0f;
     float orbital_speed3 = sqrt((grav_const * 1.0) / orbital_radius3);
     sun.position.x = orbital_radius3 * sin(current_angle3);
     sun.position.y = orbital_radius3 * cos(current_angle3);
@@ -75,15 +73,8 @@ int main(int argc, char *argv[])
     camera.position.z = max_zoom;
 
     DL_Bind bind = {DL_F11};
-    DL_Bind speed = {DL_SPACE};
 
     bool fullscreen;
-
-    int days;
-    int years;
-
-    bool can_add_day = true;
-    bool can_add_year = true;
 
     while (window.running)
     {
@@ -109,15 +100,16 @@ int main(int argc, char *argv[])
         camera.position.y += dl_get_axis(&window, vertical) * move_speed * dl_time.delta_time;
         camera.position.z += dl_get_axis(&window, zoom) * move_speed * dl_time.delta_time;
 
+        if (dl_get_key_just_pressed(&window, &bind))
+        {
+            fullscreen = !fullscreen;
+            SDL_SetWindowFullscreen(window.sdl_window, fullscreen);
+        }
 
         if (camera.position.z < 1.0f)
             camera.position.z = 1.0f;
         if (camera.position.z > max_zoom)
             camera.position.z = max_zoom;
-
-        char buffer[50];
-        sprintf(buffer, "DuckyLib: Solar System (%d FPS)", dl_time.fps);
-        dl_window_set_name(&window, buffer);
 
         dl_window_set_viewport(&window, DL_Aspect_1920x1080);
         dl_renderer_set_background((Vec4){0.1f, 0.1f, 0.1f, 1.0f});
@@ -131,44 +123,7 @@ int main(int argc, char *argv[])
 
         dl_window_swap_buffer(&window);
         dl_frame_end();
-
-        if (dl_get_key_pressed(&window, &speed))
-        {
-            dl_time.delta_time *= 10;
-        }
-
-        if (roundf(planet.position.x) == roundf(sun.position.x) && planet.position.y > sun.position.y)
-        {
-            if (can_add_day)
-            {
-                printf("new day\n");
-                days++;
-                can_add_day = false;
-            }
-
-        }
-        else
-        {
-            can_add_day = true;
-        }
-        if (roundf(sun.position.x) == roundf(black_hole.position.x) && sun.position.y > black_hole.position.y)
-        {
-            if(can_add_year)
-            {
-                printf("new year\n");
-                years++;
-                can_add_year = false;
-            }
-        } 
-        else
-        {
-            can_add_year = true;
-        }
     }
-
-
-
-    printf("days: %d, years %d\n", days, years);
 
     dl_entity_destroy(&planet);
     dl_entity_destroy(&moon);

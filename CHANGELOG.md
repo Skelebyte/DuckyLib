@@ -8,6 +8,7 @@
 - added `DL_Bind` to `input.h`, which holds a single `DL_Keycode` and a `bool` that tells if its pressed
 - added `dl_get_key_pressed` to `input.h`, that returns `1` while a bind is pressed
 - added `dl_get_key_just_pressed` to `input.h`, that only returns `1` once while a bind is pressed
+- added `dl_window_set_name` to `window.h`
 
 ## 8/7/25
 

@@ -125,6 +125,11 @@ int dl_window_set_viewport(DL_Window *window, DL_AspectRatios virtual_aspect)
     return 0;
 }
 
+void dl_window_set_name(DL_Window *window, const char *name)
+{
+    SDL_SetWindowTitle(window->sdl_window, name);
+}
+
 int dl_window_swap_buffer(DL_Window *window)
 {
     SDL_GL_SwapWindow(window->sdl_window);
