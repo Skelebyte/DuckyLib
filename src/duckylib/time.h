@@ -17,39 +17,39 @@ typedef struct DL_Time
 
 } DL_Time, Time;
 
-DL_Time time = {0};
+DL_Time dl_time = {0};
 
 int dl_frame_init()
 {
-    time._last_frame = SDL_GetTicks();
-    time._last_frame /= 1000;
+    dl_time._last_frame = SDL_GetTicks();
+    dl_time._last_frame /= 1000;
 
     return 0;
 }
 
 int dl_frame_begin()
 {
-    time._first_frame = SDL_GetTicks();
-    time._first_frame /= 1000;
+    dl_time._first_frame = SDL_GetTicks();
+    dl_time._first_frame /= 1000;
 
     return 0;
 }
 
 int dl_frame_end()
 {
-    time._last_frame = SDL_GetTicks();
-    time._last_frame /= 1000;
+    dl_time._last_frame = SDL_GetTicks();
+    dl_time._last_frame /= 1000;
 
-    time.delta_time = time._last_frame - time._first_frame;
+    dl_time.delta_time = dl_time._last_frame - dl_time._first_frame;
 
-    time._counted_frames++;
-    time._frame_time += time.delta_time;
+    dl_time._counted_frames++;
+    dl_time._frame_time += dl_time.delta_time;
 
-    if(time._frame_time >= 1.0f)
+    if(dl_time._frame_time >= 1.0f)
     {
-        time.fps = time._counted_frames;
-        time._frame_time = 0;
-        time._counted_frames = 0;
+        dl_time.fps = dl_time._counted_frames;
+        dl_time._frame_time = 0;
+        dl_time._counted_frames = 0;
     }
 
     return 0;

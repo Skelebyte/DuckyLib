@@ -28,10 +28,8 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
         vec3(0.0f, 0.0f, 0.0f),
         vec3(0.0f, 0.0f, 0.0f),
         vec3(1.0f, 1.0f, 1.0f),
-        mat4_identity(),
-        {0},
     };
-    entity.model = mat4_custom(entity.position, entity.rotation, entity.scale);
+    mat4_custom(entity.model, entity.position, entity.rotation, entity.scale);
 
     if(vert_src_dir == NULL)
     {
@@ -68,7 +66,7 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
     return entity;
 }
 
-int dl_entity_update(DL_Entity *entity) 
+void dl_entity_update(DL_Entity *entity) 
 {
 
     if(entity->rotation.x > 360) 
@@ -98,7 +96,8 @@ int dl_entity_update(DL_Entity *entity)
         entity->rotation.z = entity->rotation.z + 360;
     }
 
-    entity->model = mat4_custom(entity->position, entity->rotation, entity->scale);
+    
+    mat4_custom(entity->model, entity->position, entity->rotation, entity->scale);
 
     dl_renderer_use_program(&entity->renderer);
 
@@ -111,13 +110,10 @@ int dl_entity_update(DL_Entity *entity)
     dl_renderer_bind_vao(&entity->renderer);
     dl_texture_bind(&entity->material.texture);
     dl_renderer_draw(&entity->renderer);
-
-    return 0;
 }
 
-int dl_entity_destroy(DL_Entity *entity)
+void dl_entity_destroy(DL_Entity *entity)
 {
-    mat4_free(entity->model);
     dl_renderer_delete(&entity->renderer);
 }
 

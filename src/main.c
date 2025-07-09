@@ -76,15 +76,15 @@ int main(int argc, char *argv[])
     {
         dl_frame_begin();
 
-        current_angle = current_angle + (orbital_speed * 2 * time.delta_time);
+        current_angle = current_angle + (orbital_speed * 2 * dl_time.delta_time);
         moon.position.x = orbital_radius * sin(current_angle) + planet.position.x;
         moon.position.y = orbital_radius * cos(current_angle) + planet.position.y;
 
-        current_angle2 = current_angle2 + (orbital_speed2 / 2 * time.delta_time);
+        current_angle2 = current_angle2 + (orbital_speed2 / 2 * dl_time.delta_time);
         planet.position.x = orbital_radius2 * sin(current_angle2) + sun.position.x;
         planet.position.y = orbital_radius2 * cos(current_angle2) + sun.position.y;
 
-        current_angle3 = current_angle3 + (orbital_speed3 / 4 * time.delta_time);
+        current_angle3 = current_angle3 + (orbital_speed3 / 4 * dl_time.delta_time);
         sun.position.x = orbital_radius3 * sin(current_angle3) + black_hole.position.x;
         sun.position.y = orbital_radius3 * cos(current_angle3) + black_hole.position.y;
 
@@ -92,11 +92,11 @@ int main(int argc, char *argv[])
         {
             dl_poll_events(&window);
         }
-        // camera.position.x += dl_get_axis(&window, horizontal) * move_speed * time.delta_time;
-        // camera.position.y += dl_get_axis(&window, vertical) * move_speed * time.delta_time;
+        // camera.position.x += dl_get_axis(&window, horizontal) * move_speed * dl_time.delta_time;
+        // camera.position.y += dl_get_axis(&window, vertical) * move_speed * dl_time.delta_time;
         camera.position.x = moon.position.x;
         camera.position.y = moon.position.y;
-        camera.position.z += dl_get_axis(&window, zoom) * move_speed * 10 * time.delta_time;
+        camera.position.z += dl_get_axis(&window, zoom) * move_speed * 10 * dl_time.delta_time;
         if(camera.position.z < 0.0f)
             camera.position.z = 0.0f;
         if(camera.position.z > max_zoom)
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
         dl_camera_update();
         dl_window_swap_buffer(&window);
         dl_frame_end();
-        
+        window.running = false;
     }
 
     dl_entity_destroy(&planet);

@@ -1,5 +1,11 @@
 # DuckyLib Changelog
 
+## 9/7/25
+
+- cleaned up all memory leaks
+- replaced `#define float* Mat4` with `typedef float Mat4[16];`
+- upaded all `mat4.h` functions to match the new `Mat4`
+
 ## 8/7/25
 
 - added default vertex and fragment shaders to `constants.h`, if `NULL` is passed in creating a new entity it swaps it for those instead

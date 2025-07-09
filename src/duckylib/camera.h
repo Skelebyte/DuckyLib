@@ -34,9 +34,10 @@ DL_Camera camera;
  */
 int dl_camera_new(float fov, DL_AspectRatios aspect, float near_plane, float far_plane)
 {
-    camera.projection = mat4_perspective(cmath_to_radians(fov), dl_get_virtual_aspect(aspect), near_plane, far_plane);
-    camera.view = mat4_look_at(camera.position, vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)));
-    camera.camera_matrix = mat4_multiply(camera.projection, camera.view);
+
+    mat4_perspective(camera.projection, cmath_to_radians(fov), dl_get_virtual_aspect(aspect), near_plane, far_plane);
+    mat4_look_at(camera.view, camera.position, vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)));
+    mat4_multiply(camera.camera_matrix, camera.projection, camera.view);
 
     return 0;
 }
@@ -47,10 +48,8 @@ int dl_camera_new(float fov, DL_AspectRatios aspect, float near_plane, float far
  */
 int dl_camera_update()
 {
-    mat4_free(camera.view);
-    camera.view = mat4_look_at(camera.position, vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)));
-    mat4_free(camera.camera_matrix);
-    camera.camera_matrix = mat4_multiply(camera.projection, camera.view);
+    mat4_look_at(camera.view, camera.position, vec3_add(camera.position, vec3(0.0f, 0.0f, -1.0f)));
+    mat4_multiply(camera.camera_matrix, camera.projection, camera.view);
 
     return 0;
 }
@@ -62,12 +61,7 @@ int dl_camera_update()
  */
 int dl_camera_destroy()
 {
-    mat4_free(camera.projection);
-    mat4_free(camera.view);
-    mat4_free(camera.camera_matrix);
-
     camera.position = vec3_zero();
-
     return 0;
 }
 
