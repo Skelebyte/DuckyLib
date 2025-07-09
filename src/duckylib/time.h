@@ -19,23 +19,19 @@ typedef struct DL_Time
 
 DL_Time dl_time = {0};
 
-int dl_frame_init()
+void dl_frame_init()
 {
     dl_time._last_frame = SDL_GetTicks();
     dl_time._last_frame /= 1000;
-
-    return 0;
 }
 
-int dl_frame_begin()
+void dl_frame_begin()
 {
     dl_time._first_frame = SDL_GetTicks();
     dl_time._first_frame /= 1000;
-
-    return 0;
 }
 
-int dl_frame_end()
+void dl_frame_end()
 {
     dl_time._last_frame = SDL_GetTicks();
     dl_time._last_frame /= 1000;
@@ -52,7 +48,7 @@ int dl_frame_end()
         dl_time._counted_frames = 0;
     }
 
-    return 0;
+    
 }
 
 #endif

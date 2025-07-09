@@ -81,7 +81,14 @@ typedef struct DL_InputAxis
     DL_Keycode negative;
 } DL_InputAxis, InputAxis;
 
-int dl_get_axis(DL_Window *window, DL_InputAxis axis)
+typedef struct DL_Bind
+{
+    DL_Keycode keycode;
+    bool pressed;
+} DL_Bind, Bind;
+
+int
+dl_get_axis(DL_Window *window, DL_InputAxis axis)
 {
 
     const bool *input = SDL_GetKeyboardState(NULL);
@@ -96,6 +103,41 @@ int dl_get_axis(DL_Window *window, DL_InputAxis axis)
         return -1;
     }
 
+
+    return 0;
+}
+
+int gl_get_key_pressed(DL_Window *window, DL_Bind *bind)
+{
+    const bool *input = SDL_GetKeyboardState(NULL);
+    if(input[bind->keycode] == true)
+    {
+        bind->pressed = true;
+        return 1;
+    } 
+    else
+    {
+        bind->pressed = false;
+        return 0;
+    }
+
+    return 0;
+}
+
+int gl_get_key_just_pressed(DL_Window *window, DL_Bind *bind)
+{
+    const bool *input = SDL_GetKeyboardState(NULL);
+    if (input[bind->keycode] == true && bind->pressed == false)
+    {
+        bind->pressed = true;
+        return 1;
+    }
+
+    if (input[bind->keycode] == false && bind->pressed == true)
+    {
+        bind->pressed = false;
+        return 0;
+    }
 
     return 0;
 }

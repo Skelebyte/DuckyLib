@@ -30,7 +30,9 @@ int dl_startup(DL_Window *window, bool init_camera, bool opengl_settings)
 
     }
 
-    if(opengl_settings != false)
+    SDL_GL_SetSwapInterval(1);
+
+    if (opengl_settings != false)
     {
         dl_renderer_enable_transparency(true);
         dl_renderer_enable_depth_test(true);
