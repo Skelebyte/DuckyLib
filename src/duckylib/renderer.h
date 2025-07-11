@@ -96,9 +96,9 @@ int dl_renderer_enable_antialiasing(bool toggle)
     return 0;
 }
 
-int dl_renderer_set_background(Vec4 color)
+int dl_renderer_set_background(Vec3 color)
 {
-    glClearColor(color.x, color.y, color.z, color.w);
+    glClearColor(color.x, color.y, color.z, 1.0f);
     return 0;
 }
 

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char *read_file(const char *dir)
+const char *file_read(const char *dir)
 {
     FILE *file;
     char *buffer;

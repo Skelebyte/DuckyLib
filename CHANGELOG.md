@@ -1,5 +1,13 @@
 # DuckyLib Changelog
 
+## 11/7/25
+
+- added `ui_entity.h`
+
+## 10/7/25
+
+- changed `dl_renderer_set_background` parameter from `Vec4` to `Vec3`
+
 ## 9/7/25
 
 - cleaned up all memory leaks

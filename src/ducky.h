@@ -11,6 +11,7 @@
 #include "duckylib/material.h"
 #include "duckylib/camera.h"
 #include "duckylib/entity.h"
+#include "duckylib/ui_entity.h"
 #include "duckylib/time.h"
 #include "duckylib/constants.h"
 #include "duckylib/input.h"

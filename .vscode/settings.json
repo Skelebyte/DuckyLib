@@ -19,6 +19,7 @@
         "string.h": "c",
         "vec4.h": "c",
         "texture.h": "c",
-        "cmath.h": "c"
+        "cmath.h": "c",
+        "entity.h": "c"
     }
 }

@@ -23,6 +23,9 @@ typedef struct DL_Window
     SDL_GLContext sdl_glcontext;
     SDL_Event sdl_event;
 
+    float viewport_w;
+    float viewport_h;
+
     bool running;
 } DL_Window, Window;
 
@@ -61,8 +64,11 @@ int dl_window_create(DL_Window *window, const char *title, int w, int h)
 
 int dl_poll_events(DL_Window *window)
 {
-    if (window->sdl_event.type == SDL_EVENT_QUIT)
-        window->running = false;
+    while (SDL_PollEvent(&window->sdl_event))
+    {
+        if (window->sdl_event.type == SDL_EVENT_QUIT)
+            window->running = false;
+    }
 
     return 0;
 }
@@ -95,7 +101,7 @@ float dl_get_virtual_aspect(DL_AspectRatios virtual_aspect)
     }
 }
 
-int dl_window_set_viewport(DL_Window *window, DL_AspectRatios virtual_aspect)
+void dl_window_set_viewport(DL_Window *window, DL_AspectRatios virtual_aspect)
 {
     int width, height;
     SDL_GetWindowSize(window->sdl_window, &width, &height);
@@ -103,26 +109,24 @@ int dl_window_set_viewport(DL_Window *window, DL_AspectRatios virtual_aspect)
     float window_aspect = (float)width / height;
     float game_aspect = dl_get_virtual_aspect(virtual_aspect);
 
-    int viewport_w, viewport_h, viewport_x, viewport_y;
+    int viewport_x, viewport_y;
 
 
     if(window_aspect > game_aspect) 
     { // pillarbox
-        viewport_h = height;
-        viewport_w = (int)(height * game_aspect);
-        viewport_x = (width - viewport_w) / 2;
+        window->viewport_h = height;
+        window->viewport_w = (int)(height * game_aspect);
+        viewport_x = (width - window->viewport_w) / 2;
         viewport_y = 0;
     } else 
     { // letterbox
-        viewport_w = width;
-        viewport_h = (int)(width / game_aspect);
+        window->viewport_w = width;
+        window->viewport_h = (int)(width / game_aspect);
         viewport_x = 0;
-        viewport_y = (height - viewport_h) / 2;
+        viewport_y = (height - window->viewport_h) / 2;
     }
 
-    glViewport(viewport_x, viewport_y, viewport_w, viewport_h);
-
-    return 0;
+    glViewport(viewport_x, viewport_y, window->viewport_w, window->viewport_h);
 }
 
 void dl_window_set_name(DL_Window *window, const char *name)

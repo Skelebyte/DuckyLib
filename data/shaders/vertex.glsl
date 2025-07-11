@@ -12,7 +12,7 @@ uniform mat4 camera_matrix;
 
 void main() 
 {
-    gl_Position = camera_matrix * model * vec4(a_pos, 1.0f);
+    gl_Position = model * vec4(a_pos, 1.0f);
     FragPosition = vec3(model * vec4(a_pos, 1.0f));
     texture_coords = a_texture_coords;
 }

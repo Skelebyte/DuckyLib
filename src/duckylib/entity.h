@@ -34,16 +34,18 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
     if(vert_src_dir == NULL)
     {
         vert_src_dir = dl_vert_shader;   
-    } else 
+    } 
+    else 
     {
-        vert_src_dir = read_file(vert_src_dir);
+        vert_src_dir = file_read(vert_src_dir);
     }
     if(frag_src_dir == NULL)
     {
         frag_src_dir = dl_frag_shader;
-    } else
+    } 
+    else
     {
-        frag_src_dir = read_file(frag_src_dir);
+        frag_src_dir = file_read(frag_src_dir);
     }
 
     dl_renderer_compile_shaders(&entity.renderer, vert_src_dir, frag_src_dir);
