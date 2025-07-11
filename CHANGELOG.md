@@ -2,7 +2,7 @@
 
 ## 11/7/25
 
-- added `ui_entity.h`
+- added `ui_entity.h` for ui objects, rendering and creation complete
 - `dl_material_activate` now binds the texture
 - `dl_entity_update` no longer binds texture, which is now done by `dl_material_activate`
 - added an order to how `mat4_custom` multiplies position, rotation, and scale with `Mat4_TransformationOrder`
