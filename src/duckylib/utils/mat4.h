@@ -137,23 +137,28 @@ void mat4_custom(Mat4 out, Vec3 pos, Vec3 rot, Vec3 sca, Mat4_TransformationOrde
         case Mat4_PRS:
             mat4_multiply(half_matrix, rotation, scale);
             mat4_multiply(out, position, half_matrix);
+            break;
         case Mat4_PSR:
             mat4_multiply(half_matrix, scale, rotation);
             mat4_multiply(out, position, half_matrix);
+            break;
         case Mat4_RPS:
             mat4_multiply(half_matrix, position, scale);
             mat4_multiply(out, rotation, half_matrix);
+            break;
         case Mat4_RSP:
             mat4_multiply(half_matrix, scale, position);
             mat4_multiply(out, rotation, half_matrix);
+            break;
         case Mat4_SPR:
             mat4_multiply(half_matrix, position, rotation);
             mat4_multiply(out, scale, half_matrix);
+            break;
         case Mat4_SRP:
             mat4_multiply(half_matrix, rotation, position);
             mat4_multiply(out, scale, half_matrix);
-    }
-
+            break;
+        }
 }
 
 void mat4_perspective(Mat4 out, float fov_in_rads, float aspect, float near_plane, float far_plane)
