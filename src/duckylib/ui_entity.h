@@ -34,7 +34,7 @@ DL_UIEntity dl_ui_entity_new(const char *texture_dir, DL_Blendmode blendmode, DL
         vec3(1.0f, 1.0f, 1.0f),
     };
     ui_entity.aspect_ratio = dl_get_virtual_aspect(ratio);
-    mat4_custom(ui_entity.model, ui_entity.position, ui_entity.rotation, ui_entity.scale, Mat4_PSR); // THIS ORDERING IS BROKEN
+    mat4_custom(ui_entity.model, ui_entity.position, ui_entity.rotation, ui_entity.scale, Mat4_TSR);
 
     if (vert_src_dir == NULL)
     {
@@ -107,7 +107,7 @@ void dl_ui_entity_update(DL_UIEntity *ui_entity)
         ui_entity->rotation.z = ui_entity->rotation.z + 360;
     }
 
-    mat4_custom(ui_entity->model, ui_entity->position, ui_entity->rotation, vec3(ui_entity->scale.x, ui_entity->scale.y * ui_entity->aspect_ratio, ui_entity->scale.z), Mat4_PSR);
+    mat4_custom(ui_entity->model, ui_entity->position, ui_entity->rotation, vec3(ui_entity->scale.x, ui_entity->scale.y * ui_entity->aspect_ratio, ui_entity->scale.z), Mat4_TSR);
 
     dl_renderer_use_program(&ui_entity->renderer);
 

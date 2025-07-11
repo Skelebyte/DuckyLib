@@ -29,7 +29,7 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
         vec3(0.0f, 0.0f, 0.0f),
         vec3(1.0f, 1.0f, 1.0f),
     };
-    mat4_custom(entity.model, entity.position, entity.rotation, entity.scale, Mat4_PRS);
+    mat4_custom(entity.model, entity.position, entity.rotation, entity.scale, Mat4_TRS);
 
     if(vert_src_dir == NULL)
     {
@@ -98,7 +98,7 @@ void dl_entity_update(DL_Entity *entity)
         entity->rotation.z = entity->rotation.z + 360;
     }
 
-        mat4_custom(entity->model, entity->position, entity->rotation, entity->scale, Mat4_PRS);
+        mat4_custom(entity->model, entity->position, entity->rotation, entity->scale, Mat4_TRS);
 
     dl_renderer_use_program(&entity->renderer);
 

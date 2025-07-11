@@ -7,15 +7,15 @@
 
 #define M_PI 3.14159265358979323846
 
-typedef enum Mat4_TransformationOrder
+typedef enum Mat4_MultiplicationOrder
 {
-    Mat4_PRS,
-    Mat4_PSR,
-    Mat4_RSP,
-    Mat4_RPS,
-    Mat4_SRP,
-    Mat4_SPR,
-} Mat4_TransformationOrder, TransformationOrder;
+    Mat4_TRS, // `entity` default (`transform * (rotation * scale)`)
+    Mat4_TSR, // `ui_entity` default (`transform * (scale * rotation)`)
+    Mat4_RST, // `rotation * (scale * transform)`
+    Mat4_RTS, // `rotation * (transform * scale)`
+    Mat4_SRT, // `scale * (rotation * transform)`
+    Mat4_STR, // `scale * (transform * rotation)`
+} Mat4_MultiplicationOrder, MultiplicationOrder;
 
 typedef float Mat4[16];
 
@@ -115,7 +115,7 @@ void mat4_scale(Mat4 out, Vec3 scale)
 
 }
 
-void mat4_custom(Mat4 out, Vec3 pos, Vec3 rot, Vec3 sca, Mat4_TransformationOrder order)
+void mat4_custom(Mat4 out, Vec3 pos, Vec3 rot, Vec3 sca, Mat4_MultiplicationOrder order)
 {
 
     mat4_identity(out);
@@ -134,27 +134,27 @@ void mat4_custom(Mat4 out, Vec3 pos, Vec3 rot, Vec3 sca, Mat4_TransformationOrde
     Mat4 half_matrix;
     switch(order)
     {
-        case Mat4_PRS:
+        case Mat4_TRS:
             mat4_multiply(half_matrix, rotation, scale);
             mat4_multiply(out, position, half_matrix);
             break;
-        case Mat4_PSR:
+        case Mat4_TSR:
             mat4_multiply(half_matrix, scale, rotation);
             mat4_multiply(out, position, half_matrix);
             break;
-        case Mat4_RPS:
+        case Mat4_RTS:
             mat4_multiply(half_matrix, position, scale);
             mat4_multiply(out, rotation, half_matrix);
             break;
-        case Mat4_RSP:
+        case Mat4_RST:
             mat4_multiply(half_matrix, scale, position);
             mat4_multiply(out, rotation, half_matrix);
             break;
-        case Mat4_SPR:
+        case Mat4_STR:
             mat4_multiply(half_matrix, position, rotation);
             mat4_multiply(out, scale, half_matrix);
             break;
-        case Mat4_SRP:
+        case Mat4_SRT:
             mat4_multiply(half_matrix, rotation, position);
             mat4_multiply(out, scale, half_matrix);
             break;
