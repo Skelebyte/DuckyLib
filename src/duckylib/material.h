@@ -25,6 +25,7 @@ int dl_material_activate(DL_Material *material, DL_Renderer *renderer)
 {
     glUniform4fv(glGetUniformLocation(renderer->shader_program, "color"), 1, material->color.data);
     dl_renderer_opengl_error("color", __LINE__);
+    dl_texture_bind(&material->texture);
     return 0;
 }
 

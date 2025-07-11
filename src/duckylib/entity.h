@@ -29,7 +29,7 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
         vec3(0.0f, 0.0f, 0.0f),
         vec3(1.0f, 1.0f, 1.0f),
     };
-    mat4_custom(entity.model, entity.position, entity.rotation, entity.scale);
+    mat4_custom(entity.model, entity.position, entity.rotation, entity.scale, Mat4_PRS);
 
     if(vert_src_dir == NULL)
     {
@@ -98,19 +98,14 @@ void dl_entity_update(DL_Entity *entity)
         entity->rotation.z = entity->rotation.z + 360;
     }
 
-    
-    mat4_custom(entity->model, entity->position, entity->rotation, entity->scale);
+        mat4_custom(entity->model, entity->position, entity->rotation, entity->scale, Mat4_PRS);
 
     dl_renderer_use_program(&entity->renderer);
 
     glUniformMatrix4fv(glGetUniformLocation(entity->renderer.shader_program, "model"), 1, GL_FALSE, entity->model);
 
-    
-
-    dl_material_activate(&entity->material, &entity->renderer);
-
     dl_renderer_bind_vao(&entity->renderer);
-    dl_texture_bind(&entity->material.texture);
+    dl_material_activate(&entity->material, &entity->renderer);
     dl_renderer_draw(&entity->renderer);
 }
 

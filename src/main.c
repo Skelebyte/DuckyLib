@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     dl_renderer_unbind_all(&world_entity.renderer);
 
     DL_UIEntity ui_entity = dl_ui_entity_new(NULL, BM_LINEAR, DL_Aspect_1920x1080, NULL, NULL);
-    ui_entity.color = vec4(0.54f, 0.74f, 0.13f, 0.5f);
+    ui_entity.material.color = vec4(0.54f, 0.74f, 0.13f, 0.5f);
     dl_renderer_unbind_all(&ui_entity.renderer);
 
     DL_InputAxis vertical = {
@@ -47,6 +47,8 @@ int main(int argc, char *argv[])
             ui_entity.position.y = 1.0f;
         if (ui_entity.position.y < -1.0f)
             ui_entity.position.y = -1.0f;
+
+        ui_entity.rotation.z += 5 * dl_time.delta_time;
 
         dl_window_set_viewport(&window, DL_Aspect_1920x1080);
         dl_renderer_set_background(vec3(0.1f, 0.1f, 0.1f));

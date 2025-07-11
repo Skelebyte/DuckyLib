@@ -18,8 +18,7 @@ typedef struct DL_UIEntity
 
     Mat4 model;
 
-    DL_Texture texture;
-    Vec4 color;
+    DL_Material material;
 
     DL_Renderer renderer;
 
@@ -34,9 +33,8 @@ DL_UIEntity dl_ui_entity_new(const char *texture_dir, DL_Blendmode blendmode, DL
         vec3(0.0f, 0.0f, 0.0f),
         vec3(1.0f, 1.0f, 1.0f),
     };
-    ui_entity.color = DL_WHITE;
     ui_entity.aspect_ratio = dl_get_virtual_aspect(ratio);
-    mat4_custom(ui_entity.model, ui_entity.position, ui_entity.rotation, ui_entity.scale);
+    mat4_custom(ui_entity.model, ui_entity.position, ui_entity.rotation, ui_entity.scale, Mat4_RPS);
 
     if (vert_src_dir == NULL)
     {
@@ -75,13 +73,7 @@ DL_UIEntity dl_ui_entity_new(const char *texture_dir, DL_Blendmode blendmode, DL
         texture_dir = DL_DEFAULT_TEXTURE;
     }
 
-    if(blendmode == NULL)
-    {
-        blendmode = BM_NEAREST;
-    }
-
-    dl_texture_load(&ui_entity.texture, texture_dir, blendmode);
-    dl_renderer_opengl_error("DL_UIEntity texture load failed!", __LINE__);
+    dl_material_new(&ui_entity.material, texture_dir, blendmode, DL_WHITE);
 
     return ui_entity;
 }
@@ -115,15 +107,15 @@ void dl_ui_entity_update(DL_UIEntity *ui_entity)
         ui_entity->rotation.z = ui_entity->rotation.z + 360;
     }
 
-    mat4_custom(ui_entity->model, ui_entity->position, ui_entity->rotation, vec3(ui_entity->scale.x, ui_entity->scale.y * ui_entity->aspect_ratio, ui_entity->scale.z));
+    mat4_custom(ui_entity->model, ui_entity->position, ui_entity->rotation, vec3(ui_entity->scale.x, ui_entity->scale.y * ui_entity->aspect_ratio, ui_entity->scale.z), Mat4_RPS);
 
     dl_renderer_use_program(&ui_entity->renderer);
 
     glUniformMatrix4fv(glGetUniformLocation(ui_entity->renderer.shader_program, "model"), 1, GL_FALSE, ui_entity->model);
-    glUniform4fv(glGetUniformLocation(ui_entity->renderer.shader_program, "color"), 1, ui_entity->color.data);
+
 
     dl_renderer_bind_vao(&ui_entity->renderer);
-    dl_texture_bind(&ui_entity->texture);
+    dl_material_activate(&ui_entity->material, &ui_entity->renderer);
     dl_renderer_draw(&ui_entity->renderer);
 }
 

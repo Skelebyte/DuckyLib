@@ -7,7 +7,15 @@
 
 #define M_PI 3.14159265358979323846
 
-//#define Mat4 float*
+typedef enum Mat4_TransformationOrder
+{
+    Mat4_PRS,
+    Mat4_PSR,
+    Mat4_RSP,
+    Mat4_RPS,
+    Mat4_SRP,
+    Mat4_SPR,
+} Mat4_TransformationOrder, TransformationOrder;
 
 typedef float Mat4[16];
 
@@ -107,7 +115,7 @@ void mat4_scale(Mat4 out, Vec3 scale)
 
 }
 
-void mat4_custom(Mat4 out, Vec3 pos, Vec3 rot, Vec3 sca)
+void mat4_custom(Mat4 out, Vec3 pos, Vec3 rot, Vec3 sca, Mat4_TransformationOrder order)
 {
 
     mat4_identity(out);
@@ -124,8 +132,28 @@ void mat4_custom(Mat4 out, Vec3 pos, Vec3 rot, Vec3 sca)
     mat4_scale(scale, sca);
 
     Mat4 half_matrix;
-    mat4_multiply(half_matrix, rotation, scale);
-    mat4_multiply(out, position, half_matrix);
+    switch(order)
+    {
+        case Mat4_PRS:
+            mat4_multiply(half_matrix, rotation, scale);
+            mat4_multiply(out, position, half_matrix);
+        case Mat4_PSR:
+            mat4_multiply(half_matrix, scale, rotation);
+            mat4_multiply(out, position, half_matrix);
+        case Mat4_RPS:
+            mat4_multiply(half_matrix, position, scale);
+            mat4_multiply(out, rotation, half_matrix);
+        case Mat4_RSP:
+            mat4_multiply(half_matrix, scale, position);
+            mat4_multiply(out, rotation, half_matrix);
+        case Mat4_SPR:
+            mat4_multiply(half_matrix, position, rotation);
+            mat4_multiply(out, scale, half_matrix);
+        case Mat4_SRP:
+            mat4_multiply(half_matrix, rotation, position);
+            mat4_multiply(out, scale, half_matrix);
+    }
+
 }
 
 void mat4_perspective(Mat4 out, float fov_in_rads, float aspect, float near_plane, float far_plane)
