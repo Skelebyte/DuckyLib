@@ -30,14 +30,18 @@ int main(int argc, char *argv[])
 
     float move_speed = 5.0f;
 
+    DL_MouseBind mb = {
+        DL_LMB
+    };
+
     while (window.running)
     {
         dl_frame_begin();
 
         dl_poll_events(&window);
 
-        ui_entity.position.x += dl_get_axis(&window, horizontal) * move_speed * dl_time.delta_time;
-        ui_entity.position.y += dl_get_axis(&window, vertical) * move_speed * dl_time.delta_time;
+        ui_entity.position.x += dl_input_get_axis(horizontal) * move_speed * dl_time.delta_time;
+        ui_entity.position.y += dl_input_get_axis(vertical) * move_speed * dl_time.delta_time;
 
         if(ui_entity.position.x > 1.0f)
             ui_entity.position.x = 1.0f;
@@ -57,6 +61,13 @@ int main(int argc, char *argv[])
         dl_camera_update();
         dl_entity_update(&world_entity);
         dl_ui_entity_update(&ui_entity);
+
+        if(dl_input_get_mouse_button_down(&mb))
+        {
+            Vec2 pos = dl_input_get_mouse_position();
+
+            printf("%f, %f\n", pos.x, pos.y);
+        }
 
         dl_window_swap_buffer(&window);
         dl_frame_end();

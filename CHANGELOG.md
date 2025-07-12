@@ -1,5 +1,18 @@
 # DuckyLib Changelog
 
+## 12/7/25
+
+- added a Windows build option to the `Makefile`
+- added a Linux build option to the `Makefile`
+- removed `dl_get_key_just_pressed`, moved it to be an option in `dl_get_key_pressed`
+- renamed `dl_get_key_pressed` to `dl_input_get_key_down`
+- renamed `dl_get_axis` to `dl_input_get_axis`
+- pressing both the positive and negative axis in `dl_input_get_axis` now cancel each other out, and return 0
+- removed the `DL_Window*` parameters from all input functions
+- added `dl_input_get_mouse_button_down` to `input.h`
+- added `vec2.h`
+- added `dl_input_get_mouse_position` to `input.h`
+
 ## 11/7/25
 
 - added `ui_entity.h` for ui objects, rendering and creation complete

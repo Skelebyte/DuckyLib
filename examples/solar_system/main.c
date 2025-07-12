@@ -96,11 +96,11 @@ int main(int argc, char *argv[])
         {
             dl_poll_events(&window);
         }
-        camera.position.x += dl_get_axis(&window, horizontal) * move_speed * dl_time.delta_time;
-        camera.position.y += dl_get_axis(&window, vertical) * move_speed * dl_time.delta_time;
-        camera.position.z += dl_get_axis(&window, zoom) * move_speed * dl_time.delta_time;
+        camera.position.x += dl_input_get_axis(&window, horizontal) * move_speed * dl_time.delta_time;
+        camera.position.y += dl_input_get_axis(&window, vertical) * move_speed * dl_time.delta_time;
+        camera.position.z += dl_input_get_axis(&window, zoom) * move_speed * dl_time.delta_time;
 
-        if (dl_get_key_just_pressed(&window, &bind))
+        if (dl_input_get_key_just_pressed(&window, &bind))
         {
             fullscreen = !fullscreen;
             SDL_SetWindowFullscreen(window.sdl_window, fullscreen);
