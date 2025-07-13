@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     dl_sound_engine_new(&sound_engine);
 
     DL_Sound sound;
-    dl_sound_new(&sound_engine, &sound, "data/sfx/und_die_engel_singen.mp3", false);
+    dl_sound_new(&sound_engine, &sound, "data/sfx/music.wav", false);
 
     while (window.running)
     {
