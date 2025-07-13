@@ -31,8 +31,19 @@ int main(int argc, char *argv[])
     float move_speed = 5.0f;
 
     DL_MouseBind mb = {
-        DL_LMB
+        DL_XMB2
     };
+
+    DL_Bind play = {
+        DL_SPACE
+    };
+    DL_Bind pause = {DL_L_SHIFT};
+
+    DL_SoundEngine sound_engine;
+    dl_sound_engine_new(&sound_engine);
+
+    DL_Sound sound;
+    dl_sound_new(&sound_engine, &sound, "data/sfx/und_die_engel_singen.mp3", false);
 
     while (window.running)
     {
@@ -67,6 +78,18 @@ int main(int argc, char *argv[])
             Vec2 pos = dl_input_get_mouse_position();
 
             printf("%f, %f\n", pos.x, pos.y);
+        }
+
+        if(dl_input_get_key_down(&play, true)) 
+        {
+            if(sound.playing == false)
+            {
+                dl_sound_play(&sound);
+            }
+            else
+            {
+                dl_sound_pause(&sound);
+            }
         }
 
         dl_window_swap_buffer(&window);

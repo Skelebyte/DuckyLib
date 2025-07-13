@@ -1,5 +1,10 @@
 # DuckyLib Changelog
 
+## 13/7/25
+
+- added `sound.h`, which uses `miniaudio.h`
+- added `miniaudio.h`, new dependency from [mackron/miniaudio](https://github.com/mackron/miniaudio)
+
 ## 12/7/25
 
 - added a Windows build option to the `Makefile`

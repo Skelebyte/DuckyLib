@@ -20,6 +20,9 @@
         "vec4.h": "c",
         "texture.h": "c",
         "cmath.h": "c",
-        "entity.h": "c"
+        "entity.h": "c",
+        "ui_entity.h": "c",
+        "vec2.h": "c",
+        "miniaudio.h": "c"
     }
 }
