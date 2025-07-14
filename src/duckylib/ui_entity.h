@@ -23,6 +23,7 @@ typedef struct DL_UIEntity
     DL_Renderer renderer;
 
     float aspect_ratio;
+    bool allow_out_of_bounds;
 
 } DL_UIEntity, UIEntity;
 
@@ -105,6 +106,27 @@ void dl_ui_entity_update(DL_UIEntity *ui_entity)
     else if (ui_entity->rotation.z < 0)
     {
         ui_entity->rotation.z = ui_entity->rotation.z + 360;
+    }
+
+    if(ui_entity->allow_out_of_bounds == false)
+    {
+        if (ui_entity->position.x > 1.0f)
+        {
+            ui_entity->position.x = 1.0f;
+        }
+        if (ui_entity->position.x < -1.0f)
+        {
+            ui_entity->position.x = -1.0f;
+        }
+
+        if (ui_entity->position.y > 1.0f)
+        {
+            ui_entity->position.y = 1.0f;
+        }
+        if (ui_entity->position.y < -1.0f)
+        {
+            ui_entity->position.y = -1.0f;
+        }
     }
 
     mat4_custom(ui_entity->model, ui_entity->position, ui_entity->rotation, vec3(ui_entity->scale.x, ui_entity->scale.y * ui_entity->aspect_ratio, ui_entity->scale.z), Mat4_TSR);

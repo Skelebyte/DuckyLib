@@ -1,5 +1,14 @@
 # DuckyLib Changelog
 
+## 14/7/25
+
+- removed `DL_MouseBind`
+- removed `DL_MouseButton`
+- moved all values from `DL_MouseButton` to `DL_Keycode`, and made them negative so they don't conflict with real SDL scancodes
+- `dl_input_get_key_down` now supports the new mouse codes in `DL_Keycode`
+- `dl_input_get_axis` now supports the new mouse codes in `DL_Keycode`
+- `dl_ui_entity_update` now prevents the ui from moving out of bounds (off the screen), which can be toggled with `DL_UIEntity::allow_out_of_bounds`
+
 ## 13/7/25
 
 - added `sound.h`, which uses `miniaudio.h`

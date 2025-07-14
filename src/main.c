@@ -1,5 +1,3 @@
-// Solar System
-
 #include <stdio.h>
 #include <math.h>
 #include <SDL3/SDL.h>
@@ -14,7 +12,7 @@ int main(int argc, char *argv[])
     world_entity.position = vec3(0, 0, -1.0f);
     dl_renderer_unbind_all(&world_entity.renderer);
 
-    DL_UIEntity ui_entity = dl_ui_entity_new(NULL, BM_LINEAR, DL_Aspect_1920x1080, NULL, NULL);
+    DL_UIEntity ui_entity = dl_ui_entity_new("data/textures/Circle.png", BM_LINEAR, DL_Aspect_1920x1080, NULL, NULL);
     ui_entity.material.color = vec4(0.54f, 0.74f, 0.13f, 0.5f);
     dl_renderer_unbind_all(&ui_entity.renderer);
 
@@ -28,22 +26,24 @@ int main(int argc, char *argv[])
         DL_A
     };
 
+    DL_InputAxis rotation = {
+        DL_RMB,
+        DL_LMB
+    };
+
     float move_speed = 5.0f;
-
-    DL_MouseBind mb = {
-        DL_XMB2
-    };
-
-    DL_Bind play = {
-        DL_SPACE
-    };
-    DL_Bind pause = {DL_L_SHIFT};
 
     DL_SoundEngine sound_engine;
     dl_sound_engine_new(&sound_engine);
 
     DL_Sound sound;
     dl_sound_new(&sound_engine, &sound, "data/sfx/music.wav", false);
+
+    dl_sound_play(&sound);
+
+    ui_entity.allow_out_of_bounds = true;
+    ui_entity.scale.x = 0.5f;
+    ui_entity.scale.y = 0.5f;
 
     while (window.running)
     {
@@ -53,17 +53,7 @@ int main(int argc, char *argv[])
 
         ui_entity.position.x += dl_input_get_axis(horizontal) * move_speed * dl_time.delta_time;
         ui_entity.position.y += dl_input_get_axis(vertical) * move_speed * dl_time.delta_time;
-
-        if(ui_entity.position.x > 1.0f)
-            ui_entity.position.x = 1.0f;
-        if (ui_entity.position.x < -1.0f)
-            ui_entity.position.x = -1.0f;
-        if (ui_entity.position.y > 1.0f)
-            ui_entity.position.y = 1.0f;
-        if (ui_entity.position.y < -1.0f)
-            ui_entity.position.y = -1.0f;
-
-        ui_entity.rotation.z += 5 * dl_time.delta_time;
+        world_entity.rotation.y += dl_input_get_axis(rotation) * 100 * dl_time.delta_time;
 
         dl_window_set_viewport(&window, DL_Aspect_1920x1080);
         dl_renderer_set_background(vec3(0.1f, 0.1f, 0.1f));
@@ -72,25 +62,6 @@ int main(int argc, char *argv[])
         dl_camera_update();
         dl_entity_update(&world_entity);
         dl_ui_entity_update(&ui_entity);
-
-        if(dl_input_get_mouse_button_down(&mb))
-        {
-            Vec2 pos = dl_input_get_mouse_position();
-
-            printf("%f, %f\n", pos.x, pos.y);
-        }
-
-        if(dl_input_get_key_down(&play, true)) 
-        {
-            if(sound.playing == false)
-            {
-                dl_sound_play(&sound);
-            }
-            else
-            {
-                dl_sound_pause(&sound);
-            }
-        }
 
         dl_window_swap_buffer(&window);
         dl_frame_end();

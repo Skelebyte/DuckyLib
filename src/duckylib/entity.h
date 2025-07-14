@@ -98,7 +98,8 @@ void dl_entity_update(DL_Entity *entity)
         entity->rotation.z = entity->rotation.z + 360;
     }
 
-        mat4_custom(entity->model, entity->position, entity->rotation, entity->scale, Mat4_TRS);
+
+    mat4_custom(entity->model, entity->position, entity->rotation, entity->scale, Mat4_TRS);
 
     dl_renderer_use_program(&entity->renderer);
 

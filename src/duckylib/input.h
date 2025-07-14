@@ -8,6 +8,12 @@
 
 typedef enum DL_Keycode
 {
+    DL_LMB = -1,
+    DL_MMB = -2,
+    DL_RMB = -3,
+    DL_XMB1 = -4,
+    DL_XMB2 = -5,
+
     DL_KEY = 0,
     DL_A = 4,
     DL_B = 5,
@@ -76,15 +82,6 @@ typedef enum DL_Keycode
 
 } DL_Keycode, Keycode;
 
-typedef enum DL_MouseButton
-{
-    DL_LMB = 1,
-    DL_MMB = 2,
-    DL_RMB = 3,
-    DL_XMB1 = 4,
-    DL_XMB2 = 5,
-} DL_MouseButton, MouseButton;
-
 typedef struct DL_InputAxis
 {
     DL_Keycode positive;
@@ -97,16 +94,37 @@ typedef struct DL_Bind
     bool pressed;
 } DL_Bind, Bind;
 
-typedef struct DL_MouseBind
-{
-    DL_MouseButton mouse_button;
-    bool pressed;
-} DL_MouseBind, MouseBind;
 
 int dl_input_get_axis(DL_InputAxis axis)
 {
-    const bool *input = SDL_GetKeyboardState(NULL);
 
+    SDL_MouseButtonFlags flags = SDL_GetMouseState(NULL, NULL);
+
+    if (axis.positive < 0 && axis.negative < 0)
+    {
+        if (flags & SDL_BUTTON_MASK(-axis.positive) && flags & SDL_BUTTON_MASK(-axis.negative))
+        {
+            return 0;
+        }
+    }
+
+    if (axis.positive < 0)
+    {
+        if (flags == SDL_BUTTON_MASK(-axis.positive))
+        {
+            return 1;
+        }
+    }
+
+    if (axis.negative < 0)
+    {
+        if (flags == SDL_BUTTON_MASK(-axis.negative))
+        {
+            return -1;
+        }
+    }
+
+    const bool *input = SDL_GetKeyboardState(NULL);
     if(input[axis.positive] == true && input[axis.negative] == true)
     {
         return 0;
@@ -127,8 +145,41 @@ int dl_input_get_axis(DL_InputAxis axis)
 
 int dl_input_get_key_down(DL_Bind *bind, bool get_just_once)
 {
-    const bool *input = SDL_GetKeyboardState(NULL);
+    SDL_MouseButtonFlags flags = SDL_GetMouseState(NULL, NULL);
 
+    if(bind->keycode < 0)
+    {
+        if(get_just_once == true)
+        {
+            if (flags & SDL_BUTTON_MASK(-bind->keycode) && bind->pressed == false)
+            {
+                bind->pressed = true;
+                return 1;
+            }
+            
+            if((flags & SDL_BUTTON_MASK(-bind->keycode)) == 0 && bind->pressed == true)
+            {
+                bind->pressed = false;
+                return 0;
+            }
+        }
+        else
+        {
+            if (flags == SDL_BUTTON_MASK(-bind->keycode))
+            {
+                bind->pressed = true;
+                return 1;
+            }
+            else
+            {
+                bind->pressed = false;
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    const bool *input = SDL_GetKeyboardState(NULL);
     if (get_just_once == true) // get key after its been pressed once
     {
         if (input[bind->keycode] == true && bind->pressed == false)
@@ -160,24 +211,24 @@ int dl_input_get_key_down(DL_Bind *bind, bool get_just_once)
     return 0;
 }
 
-int dl_input_get_mouse_button_down(DL_MouseBind *mouse_bind)
-{
-    SDL_MouseButtonFlags flags = SDL_GetMouseState(NULL, NULL);
-    if(flags == SDL_BUTTON_MASK(mouse_bind->mouse_button))
-    {
-        mouse_bind->pressed = true;
-        return 1;
-    }
-    else
-    {
-        mouse_bind->pressed = false;
-        return 0;
-    }
+// int dl_input_get_mouse_button_down(DL_MouseBind *mouse_bind)
+// {
+    // SDL_MouseButtonFlags flags = SDL_GetMouseState(NULL, NULL);
+    // if(flags == SDL_BUTTON_MASK(mouse_bind->mouse_button))
+    // {
+    //     mouse_bind->pressed = true;
+    //     return 1;
+    // }
+    // else
+    // {
+    //     mouse_bind->pressed = false;
+    //     return 0;
+    // }
 
     
 
-    return 0;
-}
+//     return 0;
+// }
 
 Vec2 dl_input_get_mouse_position()
 {
