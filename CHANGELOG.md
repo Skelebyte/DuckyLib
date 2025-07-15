@@ -1,5 +1,10 @@
 # DuckyLib Changelog
 
+## 15/4/25
+
+- added `viewport_x`, `viewport_x` floats to DL_Window
+- added `pillarboxed`, `letterboxed` bools to DL_Window
+
 ## 14/7/25
 
 - removed `DL_MouseBind`

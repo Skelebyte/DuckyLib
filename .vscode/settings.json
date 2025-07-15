@@ -23,6 +23,8 @@
         "entity.h": "c",
         "ui_entity.h": "c",
         "vec2.h": "c",
-        "miniaudio.h": "c"
+        "miniaudio.h": "c",
+        "time.h": "c",
+        "material.h": "c"
     }
 }

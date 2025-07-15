@@ -211,23 +211,9 @@ int dl_input_get_key_down(DL_Bind *bind, bool get_just_once)
     return 0;
 }
 
-// int dl_input_get_mouse_button_down(DL_MouseBind *mouse_bind)
+// float dl_input_get_scroll(DL_Window *window)
 // {
-    // SDL_MouseButtonFlags flags = SDL_GetMouseState(NULL, NULL);
-    // if(flags == SDL_BUTTON_MASK(mouse_bind->mouse_button))
-    // {
-    //     mouse_bind->pressed = true;
-    //     return 1;
-    // }
-    // else
-    // {
-    //     mouse_bind->pressed = false;
-    //     return 0;
-    // }
-
-    
-
-//     return 0;
+//     return window->sdl_event.wheel.y;
 // }
 
 Vec2 dl_input_get_mouse_position()

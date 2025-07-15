@@ -25,7 +25,11 @@ typedef struct DL_Window
 
     float viewport_w;
     float viewport_h;
+    int viewport_x;
+    int viewport_y;
 
+    bool pillarboxed;
+    bool letterboxed;
     bool running;
 } DL_Window, Window;
 
@@ -109,24 +113,27 @@ void dl_window_set_viewport(DL_Window *window, DL_AspectRatios virtual_aspect)
     float window_aspect = (float)width / height;
     float game_aspect = dl_get_virtual_aspect(virtual_aspect);
 
-    int viewport_x, viewport_y;
+    
 
-
-    if(window_aspect > game_aspect) 
+    window->pillarboxed = false;
+    window->letterboxed = false;
+    if (window_aspect > game_aspect)
     { // pillarbox
         window->viewport_h = height;
         window->viewport_w = (int)(height * game_aspect);
-        viewport_x = (width - window->viewport_w) / 2;
-        viewport_y = 0;
+        window->viewport_x = (width - window->viewport_w) / 2;
+        window->viewport_y = 0;
+        window->pillarboxed = true;
     } else 
     { // letterbox
         window->viewport_w = width;
         window->viewport_h = (int)(width / game_aspect);
-        viewport_x = 0;
-        viewport_y = (height - window->viewport_h) / 2;
+        window->viewport_x = 0;
+        window->viewport_y = (height - window->viewport_h) / 2;
+        window->letterboxed = true;
     }
 
-    glViewport(viewport_x, viewport_y, window->viewport_w, window->viewport_h);
+    glViewport(window->viewport_x, window->viewport_y, window->viewport_w, window->viewport_h);
 }
 
 void dl_window_set_name(DL_Window *window, const char *name)

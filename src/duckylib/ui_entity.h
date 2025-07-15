@@ -9,6 +9,7 @@
 #include "texture.h"
 #include "constants.h"
 #include "material.h"
+#include "input.h"
 
 typedef struct DL_UIEntity 
 {
@@ -139,6 +140,29 @@ void dl_ui_entity_update(DL_UIEntity *ui_entity)
     dl_renderer_bind_vao(&ui_entity->renderer);
     dl_material_activate(&ui_entity->material, &ui_entity->renderer);
     dl_renderer_draw(&ui_entity->renderer);
+}
+
+bool dl_ui_entity_is_mouse_over(DL_UIEntity *ui_entity, DL_Window *window)
+{
+    int screen_center_x = (window->viewport_w / 2) + window->viewport_x;
+    int screen_center_y = (window->viewport_h / 2) + window->viewport_y;
+    Vec2 mouse_position = dl_input_get_mouse_position();
+    mouse_position.x = ((mouse_position.x - screen_center_x) / (screen_center_x) / ui_entity->aspect_ratio);
+
+    printf("screen: %d (%d), %d (%d)\n", screen_center_x, window->viewport_x, screen_center_y, window->viewport_y);
+    printf("mouse pos: %f, %f\n", mouse_position.x, mouse_position.y);
+
+    if (window->pillarboxed)
+    {
+        
+        // convert mouse pos to ui screen pos 
+
+
+    }
+    else // window->letterboxed
+    {
+
+    }
 }
 
 void dl_ui_entity_destroy(DL_UIEntity *ui_entity)
