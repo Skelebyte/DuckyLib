@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
     dl_startup(&window, true, true);
 
     DL_UIEntity ui = dl_ui_entity_new(NULL, BM_LINEAR, DL_Aspect_1920x1080, NULL, NULL);
-    ui.scale.x = 2;
-    ui.scale.y = 2;
+    ui.scale.x = 0.5f;
+    ui.scale.y = 0.5f;
     dl_renderer_unbind_all(&ui.renderer);
 
     printf("%f\n", ui.aspect_ratio);
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         dl_poll_events(&window);
 
         dl_window_set_viewport(&window, DL_Aspect_1920x1080);
-        dl_renderer_set_background(vec3(0.1f, 0.1f, 0.1f));
+        dl_renderer_set_background(vec4(0.1f, 0.1f, 0.1f, 1.0f));
         dl_renderer_clear();
 
         dl_camera_update();
@@ -37,9 +37,8 @@ int main(int argc, char *argv[])
 
         dl_ui_entity_is_mouse_over(&ui, &window);
 
-        if(dl_input_get_key_down(&msg, false))
+        if(dl_ui_entity_is_mouse_over(&ui, &window))
         {
-            
         }
     }
     dl_window_destroy(&window);

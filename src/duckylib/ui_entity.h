@@ -144,24 +144,57 @@ void dl_ui_entity_update(DL_UIEntity *ui_entity)
 
 bool dl_ui_entity_is_mouse_over(DL_UIEntity *ui_entity, DL_Window *window)
 {
-    int screen_center_x = (window->viewport_w / 2) + window->viewport_x;
-    int screen_center_y = (window->viewport_h / 2) + window->viewport_y;
+    dl_renderer_enable_transparency(false);
+
     Vec2 mouse_position = dl_input_get_mouse_position();
-    mouse_position.x = ((mouse_position.x - screen_center_x) / (screen_center_x) / ui_entity->aspect_ratio);
+    mouse_position.x -= window->viewport_w;
+    mouse_position.y = window->viewport_h - (mouse_position.y - window->viewport_y) - 1;
 
-    printf("screen: %d (%d), %d (%d)\n", screen_center_x, window->viewport_x, screen_center_y, window->viewport_y);
-    printf("mouse pos: %f, %f\n", mouse_position.x, mouse_position.y);
+    DL_Texture texture;
+    glGenTextures(1, &texture.id);
+    glBindTexture(GL_TEXTURE_2D, texture.id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    if (window->pillarboxed)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, window->viewport_w, window->viewport_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+    unsigned int frame_buffer;
+    glGenFramebuffers(1, &frame_buffer);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.id, 0);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
-        
-        // convert mouse pos to ui screen pos 
+        dl_renderer_opengl_error("dl_ui_entity_is_mouse_over", 0);
+        glDeleteFramebuffers(1, &frame_buffer);
+        return false;
+    } 
 
+    dl_renderer_set_background(vec4(0.0f, 0.0f, 0.0f, 0.0f));
+    dl_renderer_clear();
+    glViewport(0, 0, window->viewport_w, window->viewport_h);
+    dl_ui_entity_update(ui_entity);
 
-    }
-    else // window->letterboxed
+    char data[4];
+
+    glReadPixels(mouse_position.x, mouse_position.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &data);
+    dl_renderer_enable_transparency(true);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDeleteTextures(1, &texture.id);
+    glDeleteFramebuffers(1, &frame_buffer);
+    if (data[3] != 0)
     {
-
+        printf("%d\n", data[3]);
+        return true;
+    } 
+    else 
+    {
+        printf("ahahaah\n");
+        return false;
     }
 }
 

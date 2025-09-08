@@ -104,6 +104,7 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
             free(data);
             return 0;
         }
+        
     }
     if (data)
     {
