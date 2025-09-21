@@ -1,5 +1,13 @@
 # DuckyLib Changelog
 
+## 21/9/25
+
+- created `.c` files for all headers (excluding `constants.h`)
+
+## 8/9/25
+
+- removed the comment from `dl_camera_destroy`
+
 ## 15/4/25
 
 - added `viewport_x`, `viewport_x` floats to DL_Window

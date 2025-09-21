@@ -1,14 +1,16 @@
 #include <stdio.h>
-#include <math.h>
 #include <SDL3/SDL.h>
 #include "ducky.h"
 
 int main(int argc, char *argv[])
 {
+
+    printf("hi mum!!\n");
+
     DL_Window window;
     dl_startup(&window, true, true);
 
-    DL_UIEntity ui = dl_ui_entity_new(NULL, BM_LINEAR, DL_Aspect_1920x1080, NULL, NULL);
+    DL_UIEntity ui = dl_ui_entity_new(NULL, BM_NEAREST, DL_Aspect_1920x1080, NULL, NULL);
     ui.scale.x = 0.5f;
     ui.scale.y = 0.5f;
     dl_renderer_unbind_all(&ui.renderer);
@@ -35,14 +37,20 @@ int main(int argc, char *argv[])
         dl_window_swap_buffer(&window);
         dl_frame_end();
 
-        dl_ui_entity_is_mouse_over(&ui, &window);
-
         if(dl_ui_entity_is_mouse_over(&ui, &window))
         {
+
+        }
+
+        if(dl_input_get_key_down(&msg, true))
+        {
+            printf("yo yo yo\n");
         }
     }
     dl_window_destroy(&window);
     dl_camera_destroy();
     SDL_Quit();
+
+
     return 0;
 }

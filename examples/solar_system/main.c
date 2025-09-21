@@ -1,9 +1,11 @@
 // Solar System
+// Compile:
+// Linux: gcc examples/solar_system/main.c src/duckylib/glad/glad.c -lSDL3 -lpthread -lm -ldl
+// Windows: gcc examples/solar_system/main.c src/duckylib/glad/glad.c -Isrc/duckylib/glad -lSDL3 -lopengl32 -lgdi32 -lm
 
-#include <stdio.h>
 #include <math.h>
 #include <SDL3/SDL.h>
-#include "ducky.h"
+#include "../../src/ducky.h"
 
 int main(int argc, char *argv[])
 {
@@ -96,11 +98,11 @@ int main(int argc, char *argv[])
         {
             dl_poll_events(&window);
         }
-        camera.position.x += dl_input_get_axis(&window, horizontal) * move_speed * dl_time.delta_time;
-        camera.position.y += dl_input_get_axis(&window, vertical) * move_speed * dl_time.delta_time;
-        camera.position.z += dl_input_get_axis(&window, zoom) * move_speed * dl_time.delta_time;
+        camera.position.x += dl_input_get_axis(horizontal) * move_speed * dl_time.delta_time;
+        camera.position.y += dl_input_get_axis(vertical) * move_speed * dl_time.delta_time;
+        camera.position.z += dl_input_get_axis(zoom) * move_speed * dl_time.delta_time;
 
-        if (dl_input_get_key_just_pressed(&window, &bind))
+        if (dl_input_get_key_down(&bind, true))
         {
             fullscreen = !fullscreen;
             SDL_SetWindowFullscreen(window.sdl_window, fullscreen);
