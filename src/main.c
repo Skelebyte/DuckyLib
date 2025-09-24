@@ -7,14 +7,20 @@ int main(int argc, char *argv[])
     DL_Window window;
     dl_startup(&window, "DuckyLib", true, true);
 
-    DL_UIEntity ui = dl_ui_entity_new(NULL, BM_NEAREST, DL_Aspect_1920x1080, NULL, NULL);
-    // ui.scale.y = 0.5f;
+    DL_UIEntity ui = dl_ui_entity_new("data/textures/Circle.png", BM_LINEAR, DL_Aspect_1920x1080, NULL, NULL);
+    //ui.material.color.w = 0.5f;
     dl_renderer_unbind_all(&ui.renderer);
 
-    DL_UIEntity ui2 = dl_ui_entity_new(DL_DEFAULT_TEXTURE, BM_NEAREST, DL_Aspect_1920x1080, NULL, NULL);
-    ui2.scale.x = 10.0f;
-    ui2.scale.y = 10.0f;
-    dl_renderer_unbind_all(&ui2.renderer);
+    DL_Entity object = dl_entity_new(dl_square_2d, sizeof(dl_square_2d), NULL, NULL);
+    object.position.z = -10;
+    dl_renderer_unbind_all(&object.renderer);
+
+    DL_Entity object2 = dl_entity_new(dl_square_2d, sizeof(dl_square_2d), NULL, NULL);
+
+    dl_texture_load(&object2.material.texture, "data/textures/Circle.png", BM_LINEAR);
+    object2.position.z = -8;
+    object2.position.x = 0.5f;
+    dl_renderer_unbind_all(&object2.renderer);
 
     printf("%f\n", ui.aspect_ratio);
 
@@ -33,31 +39,17 @@ int main(int argc, char *argv[])
 
         dl_camera_update();
         dl_ui_entity_update(&ui);
-        dl_ui_entity_update(&ui2);
 
-        // if(dl_ui_entity_is_mouse_over(&ui, &window))
-        // {
-
-        // }
+        dl_entity_update(&object);
+        dl_entity_update(&object2);
 
         if(dl_input_get_key_down(&spc, true))
         {
-            dl_log_new("yo", DL_MSG);
+            object.position.z += 1;
         }
 
         if (dl_input_get_key_down(&lmb, false))
         {
-            // float x = dl_input_get_mouse_position().x;
-            // x -= window.viewport_x;
-            // x -= window.viewport_w / 2;
-            // x /= window.viewport_w / 2;
-            // float y = dl_input_get_mouse_position().y;
-            // y -= window.viewport_y;
-            // y -= window.viewport_h / 2;
-            // y /= window.viewport_h / 2;
-            // ui.position.x = x;
-            // ui.position.y = -y;
-
             ui.position = dl_input_get_mouse_position(&window);
         }
 

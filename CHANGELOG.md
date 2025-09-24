@@ -7,7 +7,8 @@
 - added `dl_input_get_mouse_position`, which returns the mouse position with the center of the viewport as 0, 0.
 - added `fmath_v2_to_v3`, which converts a Vec2 to Vec3, with the z axis specified.
 - added `fmath_v3_to_v2`, which converts a Vec3 to Vec2, dropping the z axis.
-- broke built-in texture generating, except for the missing pink and black texture.
+- fixed texture generation!
+- discovered opacity bug
 
 ## 22/9/25
 

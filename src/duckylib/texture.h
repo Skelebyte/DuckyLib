@@ -3,6 +3,7 @@
 
 #include "stb/stb_image.h"
 #include "glad/glad.h"
+#include "utils/log.h"
 
 #define DL_MISSING_TEXTURE "DL_MISSING_TEXTURE"
 #define DL_SOLID_TEXTURE "DL_SOLID_TEXTURE"

@@ -39,10 +39,12 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    if(path != DL_MISSING_TEXTURE || path != DL_DEFAULT_TEXTURE)
+    if (strcmp(path, DL_MISSING_TEXTURE) != 0 && strcmp(path, DL_DEFAULT_TEXTURE) != 0 && strcmp(path, DL_SOLID_TEXTURE) != 0)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
+
+        printf("yoyoyoyoyoyoa %s\n", path);
     }
     else
     {
@@ -52,8 +54,7 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
 
     int width, height, channel_count;
     unsigned char *data;
-
-    if (path != DL_MISSING_TEXTURE && path != DL_SOLID_TEXTURE && path != DL_DEFAULT_TEXTURE)
+    if (strcmp(path, DL_MISSING_TEXTURE) != 0 && strcmp(path, DL_DEFAULT_TEXTURE) != 0 && strcmp(path, DL_SOLID_TEXTURE) != 0)
     {
         data = stbi_load(path, &width, &height, &channel_count, 0);
     }
@@ -62,10 +63,11 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
         printf("yoyo its here\n");
         width = 4;
         height = 4;
-        if (path == DL_MISSING_TEXTURE)
+        if (strcmp(path, DL_MISSING_TEXTURE) == 0)
         {
             // gen missing texture
-            data = dl_texture_generate(width, height, 0, 0, 255, 0, 0, 0);
+            dl_log_new("generating missing texture", DL_MSG);
+            data = dl_texture_generate(width, height, 255, 0, 255, 0, 0, 0);
             if (!data)
                 printf("failed to generate missing texture!\n");
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -73,11 +75,12 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
             free(data);
             return 0;
         }
-        if (path == DL_SOLID_TEXTURE)
+        if (strcmp(path, DL_SOLID_TEXTURE) == 0)
         {
             width = 1;
             height = 1;
             // gen solid texture
+            dl_log_new("generating solid texture", DL_MSG);
             data = dl_texture_generate(width, height, 255, 255, 255, 255, 255, 255);
             if (!data)
                 printf("failed to generate solid texture!\n");
@@ -86,10 +89,10 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
             free(data);
             return 0;
         }
-        if(path == DL_DEFAULT_TEXTURE)
+        if (strcmp(path, DL_DEFAULT_TEXTURE) == 0)
         {
             // gen default checkered texture
-            printf("gen def tex\n");
+            dl_log_new("generating default texture", DL_MSG);
             data = dl_texture_generate(width, height, 220, 220, 220, 255, 255, 255);
             if (!data)
                 printf("failed to generate default checkered texture!\n");
@@ -105,9 +108,12 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
         GLenum format = channel_count == 4 ? GL_RGBA : GL_RGB;
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
+
+        
     }
     else
     {
+
         // proc gen missing texture
         width = 4;
         height = 4;
@@ -118,12 +124,32 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
         glGenerateMipmap(GL_TEXTURE_2D);
 
         free(data);
+
+        const size_t len1 = strlen("Could not find file: ");
+        const size_t len2 = strlen(path);
+        const size_t total_len = len1 + len2 + 1;
+
+        char *log_data = malloc(total_len);
+        if (!log_data)
+        {
+            dl_log_new("Failed to malloc error string! (texture.c, dl_texture_load).", DL_ERR);
+            return 0;
+        }
+
+        memcpy(log_data, "Could not find file: ", len1);
+        memcpy(log_data + len1, path, len2 + 1);
+
+        dl_log_new(log_data, DL_ERR);
+
+        free(log_data);
         return 0;
     }
 
-    stbi_image_free(data);
+    
 
     texture->path = path;
+
+    stbi_image_free(data);
 
     return 0;
 }
