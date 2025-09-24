@@ -4,8 +4,9 @@
 #include "stb/stb_image.h"
 #include "glad/glad.h"
 
+#define DL_MISSING_TEXTURE "DL_MISSING_TEXTURE"
+#define DL_SOLID_TEXTURE "DL_SOLID_TEXTURE"
 #define DL_DEFAULT_TEXTURE "DL_DEFAULT_TEXTURE"
-#define DL_DEFAULT_TEXTURE_SOLID "DL_DEFAULT_TEXTURE_SOLID"
 
 typedef enum DL_Blendmode
 {

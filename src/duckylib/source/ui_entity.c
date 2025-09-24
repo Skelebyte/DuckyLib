@@ -3,12 +3,12 @@
 DL_UIEntity dl_ui_entity_new(const char *texture_dir, DL_Blendmode blendmode, DL_AspectRatios ratio, const char *vert_src_dir, const char *frag_src_dir)
 {
     DL_UIEntity ui_entity = {
+        vec2(0.0f, 0.0f),
         vec3(0.0f, 0.0f, 0.0f),
-        vec3(0.0f, 0.0f, 0.0f),
-        vec3(1.0f, 1.0f, 1.0f),
+        vec2(1.0f, 1.0f),
     };
     ui_entity.aspect_ratio = dl_get_virtual_aspect(ratio);
-    mat4_custom(ui_entity.model, ui_entity.position, ui_entity.rotation, ui_entity.scale, Mat4_TSR);
+    mat4_custom(ui_entity.model, fmath_v2_to_v3(ui_entity.position, 0.0f), ui_entity.rotation, fmath_v2_to_v3(ui_entity.scale, 1.0f), Mat4_TSR);
 
     if (vert_src_dir == NULL)
     {
@@ -44,7 +44,7 @@ DL_UIEntity dl_ui_entity_new(const char *texture_dir, DL_Blendmode blendmode, DL
 
     if(texture_dir == NULL)
     {
-        texture_dir = DL_DEFAULT_TEXTURE;
+        texture_dir = DL_MISSING_TEXTURE;
     }
 
     dl_material_new(&ui_entity.material, texture_dir, blendmode, DL_WHITE);
@@ -102,7 +102,7 @@ void dl_ui_entity_update(DL_UIEntity *ui_entity)
         }
     }
 
-    mat4_custom(ui_entity->model, ui_entity->position, ui_entity->rotation, vec3(ui_entity->scale.x, ui_entity->scale.y * ui_entity->aspect_ratio, ui_entity->scale.z), Mat4_TSR);
+    mat4_custom(ui_entity->model, fmath_v2_to_v3(ui_entity->position, 0.0f), ui_entity->rotation, vec3(ui_entity->scale.x, ui_entity->scale.y * ui_entity->aspect_ratio, 1.0f), Mat4_TSR);
 
     dl_renderer_use_program(&ui_entity->renderer);
 
@@ -116,61 +116,20 @@ void dl_ui_entity_update(DL_UIEntity *ui_entity)
 
 bool dl_ui_entity_is_mouse_over(DL_UIEntity *ui_entity, DL_Window *window)
 {
-    dl_renderer_enable_transparency(false);
+    Vec2 mouse_position;
+    SDL_GetMouseState(&mouse_position.x, &mouse_position.y);
+    printf("X: %f\n", mouse_position.x);
+    printf("Y: %f\n", mouse_position.y);
+    printf("\n");
 
-    Vec2 mouse_position = dl_input_get_mouse_position();
-    mouse_position.x -= window->viewport_w;
-    mouse_position.y = window->viewport_h - (mouse_position.y - window->viewport_y) - 1;
+    printf("uie pos x: %f\n", ui_entity->position.x);
+    printf("uie pos y: %f\n", ui_entity->position.y);
 
-    DL_Texture texture;
-    glGenTextures(1, &texture.id);
-    glBindTexture(GL_TEXTURE_2D, texture.id);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, window->viewport_w, window->viewport_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
-    unsigned int frame_buffer;
-    glGenFramebuffers(1, &frame_buffer);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.id, 0);
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    {
-        dl_renderer_opengl_error("dl_ui_entity_is_mouse_over", 0);
-        glDeleteFramebuffers(1, &frame_buffer);
-        return false;
-    }
-
-    dl_renderer_set_background(vec4(0.0f, 0.0f, 0.0f, 0.0f));
-    dl_renderer_clear();
-    glViewport(0, 0, window->viewport_w, window->viewport_h);
-    dl_ui_entity_update(ui_entity);
-
-    char data[4];
-
-    glReadPixels(mouse_position.x, mouse_position.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &data);
-    dl_renderer_enable_transparency(true);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteTextures(1, &texture.id);
-    glDeleteFramebuffers(1, &frame_buffer);
-    if (data[3] != 0)
-    {
-        printf("%d\n", data[3]);
-        return true;
-    }
-    else
-    {
-        printf("ahahaah\n");
-        return false;
-    }
+    return false;
 }
 
 void dl_ui_entity_destroy(DL_UIEntity *ui_entity)
 {
+    
     dl_renderer_delete(&ui_entity->renderer);
 }

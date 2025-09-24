@@ -104,6 +104,7 @@ int dl_input_get_key_down(DL_Bind *bind, bool get_just_once);
 //     return window->sdl_event.wheel.y;
 // }
 
-Vec2 dl_input_get_mouse_position();
+Vec2 dl_input_get_raw_mouse_position();
+Vec2 dl_input_get_mouse_position(DL_Window *window);
 
 #endif

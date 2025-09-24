@@ -116,10 +116,27 @@ int dl_input_get_key_down(DL_Bind *bind, bool get_just_once)
     return 0;
 }
 
-Vec2 dl_input_get_mouse_position()
+Vec2 dl_input_get_raw_mouse_position()
 {
-    Vec2 pos;
+    Vec2 pos = {0};
     SDL_GetMouseState(&pos.x, &pos.y);
+
+    return pos;
+}
+
+Vec2 dl_input_get_mouse_position(DL_Window *window)
+{
+    Vec2 pos = {0};
+    SDL_GetMouseState(&pos.x, &pos.y);
+
+    pos.x -= window->viewport_x;
+    pos.x -= window->viewport_w / 2;
+    pos.x /= window->viewport_w / 2;
+    pos.y -= window->viewport_y;
+    pos.y -= window->viewport_h / 2;
+    pos.y /= window->viewport_h / 2;
+
+    pos.y = -pos.y;
 
     return pos;
 }

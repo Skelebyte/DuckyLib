@@ -13,9 +13,9 @@
 
 typedef struct DL_UIEntity
 {
-    Vec3 position;
+    Vec2 position;
     Vec3 rotation;
-    Vec3 scale;
+    Vec2 scale;
 
     Mat4 model;
 

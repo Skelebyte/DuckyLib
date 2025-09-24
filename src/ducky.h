@@ -16,28 +16,30 @@
 #include "duckylib/time.h"
 #include "duckylib/constants.h"
 #include "duckylib/input.h"
-#include "duckylib/utils/cmath.h"
+#include "duckylib/utils/fmath.h"
 #include "duckylib/utils/file.h"
 #include "duckylib/utils/mat4.h"
 #include "duckylib/utils/vec2.h"
 #include "duckylib/utils/vec3.h"
 #include "duckylib/utils/vec4.h"
+#include "duckylib/utils/log.h"
 
-int dl_startup(DL_Window *window, bool init_camera, bool opengl_settings)
+int dl_startup(DL_Window *window, const char *project_name, bool init_camera, bool opengl_settings)
 {
+
+    // dl_log_new("Duckylib Started!", DL_MSG);
+
     if(window != NULL)
     {
-        if (dl_window_create(window, "DuckyLib", 800, 600))
+        if (dl_window_create(window, project_name, 800, 600))
         {
-            printf("window failed\n");
+            dl_log_new("Failed to create window!", DL_ERR);
         }
-
-
     }
 
     SDL_GL_SetSwapInterval(1);
 
-    if (opengl_settings != false)
+    if (opengl_settings == true)
     {
         dl_renderer_enable_transparency(true);
         dl_renderer_enable_depth_test(true);
@@ -45,7 +47,7 @@ int dl_startup(DL_Window *window, bool init_camera, bool opengl_settings)
         dl_renderer_enable_antialiasing(true);
     }
 
-    if(init_camera != false)
+    if (init_camera == true)
     {
         dl_camera_new(75.0f, DL_Aspect_1920x1080, 0.1f, 1000.0f);
     }

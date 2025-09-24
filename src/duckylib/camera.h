@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "utils/cmath.h"
+#include "utils/fmath.h"
 #include "window.h"
 
 /**

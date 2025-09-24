@@ -25,6 +25,8 @@
         "vec2.h": "c",
         "miniaudio.h": "c",
         "time.h": "c",
-        "material.h": "c"
+        "material.h": "c",
+        "mat4.h": "c",
+        "log.h": "c"
     }
 }

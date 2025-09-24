@@ -39,7 +39,7 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    if(path != DL_DEFAULT_TEXTURE)
+    if(path != DL_MISSING_TEXTURE || path != DL_DEFAULT_TEXTURE)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
@@ -53,18 +53,19 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
     int width, height, channel_count;
     unsigned char *data;
 
-    if (path != DL_DEFAULT_TEXTURE && path != DL_DEFAULT_TEXTURE_SOLID)
+    if (path != DL_MISSING_TEXTURE && path != DL_SOLID_TEXTURE && path != DL_DEFAULT_TEXTURE)
     {
         data = stbi_load(path, &width, &height, &channel_count, 0);
     }
     else
     {
+        printf("yoyo its here\n");
         width = 4;
         height = 4;
-        if (path == DL_DEFAULT_TEXTURE)
+        if (path == DL_MISSING_TEXTURE)
         {
-            // proc gen default texture
-            data = dl_texture_generate(width, height, 220, 220, 220, 255, 255, 255);
+            // gen missing texture
+            data = dl_texture_generate(width, height, 0, 0, 255, 0, 0, 0);
             if (!data)
                 printf("failed to generate missing texture!\n");
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -72,20 +73,32 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
             free(data);
             return 0;
         }
-        if (path == DL_DEFAULT_TEXTURE_SOLID)
+        if (path == DL_SOLID_TEXTURE)
         {
             width = 1;
             height = 1;
-            // proc gen default texture solid
+            // gen solid texture
             data = dl_texture_generate(width, height, 255, 255, 255, 255, 255, 255);
             if (!data)
-                printf("failed to generate missing texture!\n");
+                printf("failed to generate solid texture!\n");
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
             free(data);
             return 0;
         }
-
+        if(path == DL_DEFAULT_TEXTURE)
+        {
+            // gen default checkered texture
+            printf("gen def tex\n");
+            data = dl_texture_generate(width, height, 220, 220, 220, 255, 255, 255);
+            if (!data)
+                printf("failed to generate default checkered texture!\n");
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            free(data);
+            return 0;
+        }
+        printf("end\n");
     }
     if (data)
     {

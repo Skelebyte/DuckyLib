@@ -1,5 +1,18 @@
 # DuckyLib Changelog
 
+## 24/9/25
+
+- created `log.h` in utils
+- added `dl_input_get_raw_mouse_position`, which returns the mouse position with the top left of the window being 0, 0.
+- added `dl_input_get_mouse_position`, which returns the mouse position with the center of the viewport as 0, 0.
+- added `fmath_v2_to_v3`, which converts a Vec2 to Vec3, with the z axis specified.
+- added `fmath_v3_to_v2`, which converts a Vec3 to Vec2, dropping the z axis.
+- broke built-in texture generating, except for the missing pink and black texture.
+
+## 22/9/25
+
+- renamed `cmath.h` and `cmath.c` to `fmath.h` and `fmath.c`
+
 ## 21/9/25
 
 - created `.c` files for all headers (excluding `constants.h`)
