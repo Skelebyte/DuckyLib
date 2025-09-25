@@ -138,5 +138,14 @@ Vec2 dl_input_get_mouse_position(DL_Window *window)
 
     pos.y = -pos.y;
 
+    if (pos.x > 1.0f)
+        pos.x = 1.0f;
+    if (pos.x < -1.0f)
+        pos.x = -1.0f;
+    if (pos.y > 1.0f)
+        pos.y = 1.0f;
+    if (pos.y < -1.0f)
+        pos.y = -1.0f;
+
     return pos;
 }

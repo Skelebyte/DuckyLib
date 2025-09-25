@@ -49,6 +49,8 @@ DL_UIEntity dl_ui_entity_new(const char *texture_dir, DL_Blendmode blendmode, DL
 
     dl_material_new(&ui_entity.material, texture_dir, blendmode, DL_WHITE);
 
+    dl_renderer_unbind_all(&ui_entity.renderer);
+
     return ui_entity;
 }
 

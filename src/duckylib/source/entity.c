@@ -44,6 +44,8 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
     dl_material_new(&entity.material, DL_MISSING_TEXTURE, BM_NEAREST, DL_WHITE);
     dl_renderer_opengl_error("new material", __LINE__);
 
+    dl_renderer_unbind_all(&entity.renderer);
+
     return entity;
 }
 

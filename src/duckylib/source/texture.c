@@ -43,8 +43,6 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
-
-        printf("yoyoyoyoyoyoa %s\n", path);
     }
     else
     {
@@ -60,7 +58,6 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
     }
     else
     {
-        printf("yoyo its here\n");
         width = 4;
         height = 4;
         if (strcmp(path, DL_MISSING_TEXTURE) == 0)

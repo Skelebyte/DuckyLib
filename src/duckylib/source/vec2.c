@@ -74,3 +74,8 @@ Vec2 vec2_cross(Vec2 a, Vec2 b)
     };
     return cross;
 }
+
+float vec2_distance(Vec2 a, Vec2 b)
+{
+    return sqrt(pow((b.x - a.x), 2) + pow((b.y, a.y), 2));
+}

@@ -1,7 +1,7 @@
 // Solar System
 // Compile:
-// Linux: gcc examples/solar_system/main.c src/duckylib/glad/glad.c -lSDL3 -lpthread -lm -ldl
-// Windows: gcc examples/solar_system/main.c src/duckylib/glad/glad.c -Isrc/duckylib/glad -lSDL3 -lopengl32 -lgdi32 -lm
+// Linux: gcc examples/solar_system/main.c src/duckylib/source/*.c src/duckylib/glad/glad.c -lSDL3 -lpthread -lm -ldl
+// Windows: gcc examples/solar_system/main.c src/duckylib/source/*.c src/duckylib/glad/glad.c -Isrc/duckylib/glad -lSDL3 -lopengl32 -lgdi32 -lm
 
 #include <math.h>
 #include <SDL3/SDL.h>
@@ -10,43 +10,42 @@
 int main(int argc, char *argv[])
 {
     DL_Window window;
-    dl_startup(&window, true, true);
-    SDL_SetWindowTitle(window.sdl_window, "DuckyLib: Solar System");
+    dl_startup(&window, "DuckyLib: Solar System Example", true, true);
+    
 
     Entity planet = dl_entity_new(dl_square_2d, sizeof(dl_square_2d), NULL, NULL);
     planet.position = vec3(0.0f, 30.0f, 0.0f);
     planet.scale = vec3(6.0f, 6.0f, 6.0f);
     dl_material_new(&planet.material, "data/textures/Circle.png", GL_LINEAR, vec4(0.2f, 0.63f, 0.25f, 1.0f));
-    dl_renderer_unbind_all(&planet.renderer);
 
     Entity moon = dl_entity_new(dl_square_2d, sizeof(dl_square_2d), NULL, NULL);
     moon.position = vec3(0.0f, 10.0f, 0.0f);
     moon.scale = vec3(1.0f, 1.0f, 1.0f);
     dl_material_new(&moon.material, "data/textures/Circle.png", GL_LINEAR, vec4(0.31f, 0.32f, 0.34f, 1.0f));
-    dl_renderer_unbind_all(&moon.renderer);
 
     Entity sun = dl_entity_new(dl_square_2d, sizeof(dl_square_2d), NULL, NULL);
     sun.position = vec3(0.0f, 0.0f, 0.0f);
     sun.scale = vec3(10.0f, 10.0f, 10.0f);
     dl_material_new(&sun.material, "data/textures/Circle.png", GL_LINEAR, vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    dl_renderer_unbind_all(&moon.renderer);
 
     Entity black_hole = dl_entity_new(dl_square_2d, sizeof(dl_square_2d), NULL, NULL);
     black_hole.scale = vec3(10.0f, 10.0f, 10.0f);
     dl_material_new(&black_hole.material, "data/textures/Circle.png", GL_LINEAR, vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    dl_renderer_unbind_all(&black_hole.renderer);
 
     float move_speed = 100.0f;
 
     InputAxis vertical = {
         DL_W,
-        DL_S};
+        DL_S
+    };
     InputAxis horizontal = {
         DL_D,
-        DL_A};
+        DL_A
+    };
     InputAxis zoom = {
         DL_Q,
-        DL_E};
+        DL_E
+    };
 
     const float grav_const = 0.6674f;
     const float planet_mass = 0.5972f;
@@ -74,9 +73,9 @@ int main(int argc, char *argv[])
     float max_zoom = 200.0f;
     camera.position.z = max_zoom;
 
-    DL_Bind bind = {DL_F11};
+    DL_Bind toggle_fullscreen = {DL_F11};
 
-    bool fullscreen;
+    bool fullscreen = false;
 
     while (window.running)
     {
@@ -102,7 +101,7 @@ int main(int argc, char *argv[])
         camera.position.y += dl_input_get_axis(vertical) * move_speed * dl_time.delta_time;
         camera.position.z += dl_input_get_axis(zoom) * move_speed * dl_time.delta_time;
 
-        if (dl_input_get_key_down(&bind, true))
+        if (dl_input_get_key_down(&toggle_fullscreen, true))
         {
             fullscreen = !fullscreen;
             SDL_SetWindowFullscreen(window.sdl_window, fullscreen);
@@ -114,7 +113,7 @@ int main(int argc, char *argv[])
             camera.position.z = max_zoom;
 
         dl_window_set_viewport(&window, DL_Aspect_1920x1080);
-        dl_renderer_set_background((Vec4){0.1f, 0.1f, 0.1f, 1.0f});
+        dl_renderer_set_background(vec4(0.1f, 0.1f, 0.1f, 1.0f));
         dl_renderer_clear();
 
         dl_camera_update();

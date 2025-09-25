@@ -1,5 +1,12 @@
 # DuckyLib Changelog
 
+## 25/9/25
+
+- there was no opacity bug, `DL_UIEntity` needs to be drawn after drawing `DL_Entity`.
+- updated the solar system example
+- `dl_entity_new` and `dl_ui_entity_new` now call `dl_renderer_unbind_all` at the end of the function
+- added `vec2_distance` to `vec2.h`
+
 ## 24/9/25
 
 - created `log.h` in utils
