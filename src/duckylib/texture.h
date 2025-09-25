@@ -23,8 +23,7 @@ typedef struct DL_Texture
 
 unsigned char *dl_texture_generate(int width, int height, int r1, int g1, int b1, int r2, int g2, int b2);
 int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmode);
+int dl_texture_data_load(DL_Texture *texture, unsigned char *data, int width, int height, DL_Blendmode blendmode);
 int dl_texture_bind(Texture *texture);
-
-
 
 #endif

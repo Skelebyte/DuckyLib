@@ -20,6 +20,7 @@ typedef enum DL_AspectRatios
 typedef struct DL_Window
 {
     SDL_Window *sdl_window;
+    SDL_Renderer *sdl_renderer;
     SDL_GLContext sdl_glcontext;
     SDL_Event sdl_event;
 

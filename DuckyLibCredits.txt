@@ -1,0 +1,5 @@
+SDL3
+SDL3_ttf
+GLAD
+Miniaudio
+stb_image

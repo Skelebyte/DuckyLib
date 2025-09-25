@@ -13,8 +13,7 @@ typedef struct DL_Material
     Vec4 color;
 } DL_Material, Material;
 
-int dl_material_new(DL_Material *material, const char *texture_path, DL_Blendmode blendmode, Vec4 color);
-
+int dl_material_new(DL_Material *material, const char *texture_path, DL_Blendmode blendmode, Vec4 color, bool path_is_data);
 int dl_material_activate(DL_Material *material, DL_Renderer *renderer);
 
 #endif

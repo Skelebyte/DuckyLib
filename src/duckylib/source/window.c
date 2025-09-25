@@ -18,6 +18,15 @@ int dl_window_create(DL_Window *window, const char *title, int w, int h)
         return 1;
     }
 
+    window->sdl_renderer = SDL_CreateRenderer(window->sdl_window, NULL);
+    if(window->sdl_renderer == NULL)
+    {
+        printf("Failed to create SDL Renderer!");
+        SDL_DestroyWindow(window->sdl_window);
+        SDL_Quit();
+        return 2;
+    }
+
     window->sdl_glcontext = SDL_GL_CreateContext(window->sdl_window);
 
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
@@ -25,7 +34,7 @@ int dl_window_create(DL_Window *window, const char *title, int w, int h)
         printf("Failed to load GLAD!");
         SDL_DestroyWindow(window->sdl_window);
         SDL_Quit();
-        return 2;
+        return 3;
     }
 
     window->running = true;
@@ -111,14 +120,15 @@ void dl_window_set_name(DL_Window *window, const char *name)
 int dl_window_swap_buffer(DL_Window *window)
 {
     SDL_GL_SwapWindow(window->sdl_window);
-
-    //SDL_Delay(10);
+    //SDL_RenderPresent(window->sdl_renderer);
+    // SDL_Delay(10);
 
     return 0;
 }
 
 int dl_window_destroy(DL_Window *window)
 {
+    SDL_DestroyRenderer(window->sdl_renderer);
     SDL_GL_DestroyContext(window->sdl_glcontext);
     SDL_DestroyWindow(window->sdl_window);
     return 0;

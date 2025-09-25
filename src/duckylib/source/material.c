@@ -1,8 +1,15 @@
 #include "../material.h"
 
-int dl_material_new(DL_Material *material, const char *texture_path, DL_Blendmode blendmode, Vec4 color)
+int dl_material_new(DL_Material *material, const char *texture_path, DL_Blendmode blendmode, Vec4 color, bool path_is_data)
 {
-    dl_texture_load(&material->texture, texture_path, blendmode);
+    if(!path_is_data)
+    {
+        dl_texture_load(&material->texture, texture_path, blendmode);
+    }
+    // else
+    // {
+    //     dl_texture_data_load(&material->texture, texture_path, blendmode);
+    // }
     material->color = color;
 
     return 0;

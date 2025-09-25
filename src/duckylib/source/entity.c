@@ -41,7 +41,7 @@ DL_Entity dl_entity_new(float *data, size_t size, const char *vert_src_dir, cons
     dl_renderer_link_attrib(&entity.renderer, 1, 2, GL_FLOAT, 5 * sizeof(float), (void *)(3 * sizeof(float))); // texture coordinate
     dl_renderer_opengl_error("texture coords", __LINE__);
 
-    dl_material_new(&entity.material, DL_MISSING_TEXTURE, BM_NEAREST, DL_WHITE);
+    dl_material_new(&entity.material, DL_MISSING_TEXTURE, BM_NEAREST, DL_WHITE, false);
     dl_renderer_opengl_error("new material", __LINE__);
 
     dl_renderer_unbind_all(&entity.renderer);

@@ -151,6 +151,25 @@ int dl_texture_load(DL_Texture *texture, const char *path, DL_Blendmode blendmod
     return 0;
 }
 
+int dl_texture_data_load(DL_Texture *texture, unsigned char *data, int width, int height, DL_Blendmode blendmode) 
+{
+    if(texture == NULL || data == NULL)
+        return 1;
+
+    glGenTextures(1, &texture->id);
+    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, blendmode == BM_LINEAR ? GL_LINEAR : GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    return 0;
+}
+
 int dl_texture_bind(Texture *texture)
 {
     glBindTexture(GL_TEXTURE_2D, texture->id);
