@@ -28,6 +28,9 @@
         "material.h": "c",
         "mat4.h": "c",
         "log.h": "c",
-        "ducky.h": "c"
+        "ducky.h": "c",
+        "fstream": "cpp",
+        "string": "cpp",
+        "iosfwd": "cpp"
     }
 }

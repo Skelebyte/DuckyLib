@@ -1,9 +1,13 @@
-#ifndef FILE_H
-#define FILE_H
+#pragma once
 
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 
-const char *file_read(const char *dir);
-
-#endif
+namespace DL
+{
+    class File
+    {
+        public:
+        const char *Read(const char *dir);
+    };
+}
